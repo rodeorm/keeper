@@ -19,7 +19,7 @@ type ServerConfig struct {
 	PasswordKey             string `yaml:"PASSWORD_KEY"`                      //Ключ для шифрования JWT токена
 	OneTimePasswordLiveTime int    `yaml:"OTP_LIVE_TIME"`                     //Время жизни пароля для двухфакторной авторизации
 	TokenLiveTime           int    `yaml:"TOKEN_LIVE_TIME"`                   //Время жизни авторизационного токена
-
+	MessageBatchSize        int    `yaml:"MESSAGE_BATCH_SIZE"`                //Время жизни авторизационного токена
 }
 
 //ClientConfig - конфигурация клиента

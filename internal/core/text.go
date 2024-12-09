@@ -1,16 +1,18 @@
 package core
 
+import "context"
+
 // TextStorager абстрагирует хранилище текстовых данных
 type TextStorager interface {
-	AddTextByUser(*Text) error
-	SelectTextByUser(*User) ([]Text, error)
-	UpdateTextByUser(*Text, *User) error
-	DeleteTextByUser(*Text, *User) error
+	AddTextByUser(context.Context, *Text) error
+	SelectTextByUser(context.Context, *User) ([]Text, error)
+	UpdateTextByUser(context.Context, *Text, *User) error
+	DeleteTextByUser(context.Context, *Text, *User) error
 }
 
 // Text - Произвольные текстовые данные
 type Text struct {
-	Value string
-	Meta  string
-	ID    int //Уникальный идентификатор
+	Value string //16 байт. Значение
+	Meta  string //16 байт. Мета
+	ID    int    //8 байт. Уникальный идентификатор
 }

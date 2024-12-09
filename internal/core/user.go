@@ -1,16 +1,19 @@
 package core
 
+import "context"
+
 // UserStorager абстрагирует хранилище Пользователей
 type UserStorager interface {
-	RegUser(*User) error
-	UpdateUser(*User) error
-	DeleteUser(*User) error
-	AuthUser(*User) error
+	RegUser(context.Context, *User) error
+	UpdateUser(context.Context, *User) error
+	DeleteUser(context.Context, *User) error
+	AuthUser(context.Context, *User) error
 }
 
 //User - пользователи
 type User struct {
-	Login    string
-	Password string
-	Name     string
+	Login    string // Логин
+	Password string // Пароль
+	Name     string // Имя
+	Email    string // Адрес электронной почты
 }
