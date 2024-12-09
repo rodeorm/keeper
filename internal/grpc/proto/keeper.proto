@@ -1,0 +1,138 @@
+syntax = "proto3";
+
+package keeper;
+
+option go_package = "keeper/internal/grpc/proto";
+
+service KeeperService {
+    rpc Reg(RegRequest) returns (RegResponse);
+    rpc Auth(AuthRequest) returns (AuthResponse);
+    rpc CreateData(CreateDataRequest) returns (CreateDataResponse);
+    rpc ReadData(ReadDataRequest) returns (stream ReadDataResponse);
+    rpc ReadAllData(ReadAllDataRequest) returns (ReadAllDataResponse);
+    rpc UpdateData(UpdateDataRequest) returns (UpdateDataResponse);
+    rpc DeleteData(DeleteDataRequest) returns (DeleteDataResponse);
+}
+
+message DataType {
+    enum Type {
+        COUPLE = 0;
+        TEXT = 1;
+        BINARY = 2;
+        CARD = 3;
+      }
+}
+
+message Meta {
+    string value = 1;
+}
+
+message Couple {
+    string source = 1;
+    string login  = 2;
+    string password = 3;
+    Meta meta = 4;
+    int32 id = 5;
+}
+
+message Card {
+    string cardNumber  = 1;     //16-тизначный номер (в некоторых случаях 18-тизначный — включает зашифрованную информацию о банке-эмитенте)
+    string ownerName  = 2;      //Имя и фамилия владельца на латинице
+	sint32 ExpMonth   = 3;      //Срок действия: месяц
+	sint32 ExpYear    = 4;      //Срок действия: год
+	sint32 CVC        = 5;      //CVC или CVV2 — код из 3 или 4 цифр для совершения интернет-платежей, расположенный на обратной стороне
+	Meta meta = 6; 
+    int32 id = 7;
+}
+
+message Binary {
+    bytes bytes = 1;
+    Meta meta = 2;
+    int32 id = 8;
+}
+
+message Text {
+    string text = 1;
+    Meta meta = 2;
+    int32 id = 3;
+}
+
+//RegRequest запрос на регистрацию пользователя
+message RegRequest {
+    string login = 1; // логин для регистрации
+    string password = 2; // пароль для регистрации
+}
+
+//RegResponse ответ на регистрацию пользователя
+message RegResponse {
+    string message = 1; 
+}
+
+message AuthRequest {
+    string login = 1; // логин для авторизации
+    string password = 2; // пароль для авторизации
+}
+
+message AuthResponse {
+    string message = 1; 
+}
+message CreateDataRequest{
+    DataType dataType = 1;
+    Couple couple  = 2;
+    Card card = 3;
+    Binary binary = 4;
+    Text text = 5;
+}
+
+message CreateDataResponse{
+
+}
+message ReadDataRequest{
+    DataType dataType = 1;
+}
+message ReadDataResponse{
+    DataType dataType = 1;
+    Couple couple  = 2;
+    Card card = 3;
+    Binary binary = 4;
+    Text text = 5;
+}
+
+message ReadAllDataRequest{
+    DataType dataType = 1;
+}
+message ReadAllDataResponse{
+    DataType dataType = 1;
+    repeated Couple couples  = 2;
+    repeated Card cards = 3;
+    repeated Binary binaries = 4;
+    repeated Text text = 5;
+}
+
+
+message UpdateDataRequest{
+    DataType dataType = 1; // Тип обновляемой записи
+    int32 id = 2; // Идентификатор обновляемой записи
+    Couple couple  = 3;
+    Card card = 4;
+    Binary binary = 5;
+    Text text = 6;
+}
+
+message UpdateDataResponse{
+    DataType dataType = 1; // Тип обновленной записи
+    int32 id = 2; // Идентификатор обновленной записи
+    Couple couple  = 3;
+    Card card = 4;
+    Binary binary = 5;
+    Text text = 6;
+}
+
+
+message DeleteDataRequest{
+    DataType dataType = 1; // Тип обновляемой записи
+    int32 id = 2; // Идентификатор обновляемой записи
+}
+
+message DeleteDataResponse{
+}
