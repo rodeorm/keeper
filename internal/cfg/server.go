@@ -1,10 +1,14 @@
 package cfg
 
-import "github.com/rodeorm/keeper/internal/sender"
+import "github.com/rodeorm/keeper/internal/core"
 
-func ConfigurateServer(configFile string, q *sender.Queue) (Server, error) {
+func ConfigurateServer(configFile string) (*Server, error) {
+	queue := core.NewQueue(3)
+
 	builder := &ServerBuilder{}
+	srv := builder.SetConfig(configFile).
+		Build()
+	srv.MessageQueue = queue
 
-	return builder.SetConfig(configFile).
-		Build(), nil
+	return &srv, nil
 }

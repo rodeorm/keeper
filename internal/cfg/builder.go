@@ -6,7 +6,6 @@ import (
 
 	"github.com/rodeorm/keeper/internal/core"
 	"github.com/rodeorm/keeper/internal/logger"
-	"github.com/rodeorm/keeper/internal/sender"
 	"gopkg.in/yaml.v2"
 )
 
@@ -21,7 +20,7 @@ type Server struct {
 	core.TextStorager
 
 	ServerConfig
-	MessageQueue *sender.Queue
+	MessageQueue *core.Queue
 }
 
 // ServerBuilder абстракция для создания сервера

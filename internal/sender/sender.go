@@ -5,6 +5,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/rodeorm/keeper/internal/cfg"
 	"github.com/rodeorm/keeper/internal/core"
 	"github.com/rodeorm/keeper/internal/logger"
 	"go.uber.org/zap"
@@ -15,7 +16,7 @@ import (
 type Sender struct {
 	messageStorage core.MessageStorager //16 байт. Хранилище сообщений
 	from           string               //16 байт. Отправитель
-	queue          *Queue               //8 байт. Очередь сообщений к отправке
+	queue          *core.Queue          //8 байт. Очередь сообщений
 	dialer         *gomail.Dialer       //8 байт. Отправитель
 	ID             int                  //8 байт. Идентификатор воркера
 	period         int                  //8 байт. Периодичность отправки сообщений
@@ -23,7 +24,7 @@ type Sender struct {
 
 // NewSender создает новый Sender
 // Каждый Sender может рассылать сообщения через свой собственный smtp сервер
-func NewSender(queue *Queue, storage core.MessageStorager, id, smtpPort, prd int, smtpServer, smtpLogin, smtpPassword string) *Sender {
+func NewSender(queue *core.Queue, storage core.MessageStorager, id, smtpPort, prd int, smtpServer, smtpLogin, smtpPassword string) *Sender {
 	s := Sender{
 		ID:             id,
 		queue:          queue,
@@ -36,13 +37,32 @@ func NewSender(queue *Queue, storage core.MessageStorager, id, smtpPort, prd int
 	return &s
 }
 
+func SenderStart(config *cfg.Server, wg *sync.WaitGroup, exit chan struct{}) {
+	for i := range config.SenderQuantity {
+		// Асинхронно запускаем email сендеры
+		s := NewSender(
+			config.MessageQueue,
+			config.MessageStorager,
+			i,
+			config.SMTPPort,
+			config.MessagePeriod,
+			config.SMTPServer,
+			config.SMTPLogin,
+			config.SMTPPass,
+		)
+
+		go s.StartSending(exit, wg)
+	}
+}
+
 // StartSending начинает отправку сообщений
-func (s *Sender) StartSending(exit chan struct{}, wg *sync.WaitGroup, period int) {
+func (s *Sender) StartSending(exit chan struct{}, wg *sync.WaitGroup) {
 	logger.Info("StartSending", fmt.Sprintf("Сендер %d", s.ID), "стартовал")
 
 	var wg_w sync.WaitGroup
 
 	for {
+
 		select {
 		case _, ok := <-exit:
 			if !ok {
@@ -54,12 +74,16 @@ func (s *Sender) StartSending(exit chan struct{}, wg *sync.WaitGroup, period int
 				return
 			}
 		default:
+
 			wg_w.Add(1)
+
 			go func() {
 				logger.Log.Info("StartSending",
 					zap.String(fmt.Sprintf("Сендер %d", s.ID), "делает делишки"),
 				)
+
 				ms := s.queue.PopWait()
+
 				if ms == nil {
 					logger.Log.Info("StartSending",
 						zap.String(fmt.Sprintf("Сендер %d", s.ID), "сообщений нет"),

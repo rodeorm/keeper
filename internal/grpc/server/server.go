@@ -19,14 +19,15 @@ import (
 
 type grpcServer struct {
 	srv *grpc.Server // общая реализация grpc сервера
-	cfg cfg.Server   // часть сервера для приложения
+	cfg *cfg.Server  // часть сервера для приложения
 	proto.UnimplementedKeeperServiceServer
 }
 
 // ServerStart запускает grpc-сервер
-func ServerStart(cfg cfg.Server, wg *sync.WaitGroup, exit chan struct{}) error {
+func ServerStart(cfg *cfg.Server, wg *sync.WaitGroup, exit chan struct{}) error {
 	grpcSrv := grpcServer{cfg: cfg}
 	listen, err := net.Listen("tcp", cfg.RunAddress)
+
 	if err != nil {
 		logger.Error("ServerStart", "ошибка при попытке начать слушать порт", err.Error())
 		return err

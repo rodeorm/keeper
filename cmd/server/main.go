@@ -9,32 +9,20 @@ import (
 )
 
 func main() {
-	queue := sender.NewQueue(3)
-	cfgSrv, err := cfg.ConfigurateServer(*c, queue) // Остальные параметры забираем из конфигурационного файла, если каких-то не хватает, то из переменных окружения
+
+	cfgSrv, err := cfg.ConfigurateServer(*c) // Остальные параметры забираем из конфигурационного файла
 	if err != nil {
 		panic(err) // Если не получилось настроить, то паникуем в ужасе
 	}
-	// через этот канал потоки узнают, что надо закрываться
+
+	// через этот канал горутины узнают, что надо закрываться для изящного завершения работы
 	exit := make(chan struct{})
+	// через эту группу мы синхронизируем горутины
 	var wg sync.WaitGroup
-	wg.Add(cfgSrv.SenderQuantity + 1)
+
+	wg.Add(cfgSrv.SenderQuantity + 1) // Количество отправителей + одна горутина с gRPC сервером
 
 	go server.ServerStart(cfgSrv, &wg, exit) // Асинхронно запускаем grpc сервер
-	for i := range cfgSrv.SenderQuantity {
-		// Асинхронно запускаем email сендеры
-
-		s := sender.NewSender(
-			queue,
-			cfgSrv.MessageStorager,
-			i,
-			cfgSrv.SMTPPort,
-			cfgSrv.MessagePeriod,
-			cfgSrv.SMTPServer,
-			cfgSrv.SMTPLogin,
-			cfgSrv.SMTPPass,
-		)
-		go s.StartSending(exit, &wg, 15) //TODO: Period в параметры
-	}
-	wg.Wait()
-
+	go sender.SenderStart(cfgSrv, &wg, exit) // Асинхронно запускаем сендеры
+	wg.Wait()                                // Ждем
 }
