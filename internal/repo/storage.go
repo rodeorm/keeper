@@ -16,8 +16,8 @@ type postgresStorage struct {
 	preparedStatements map[string]*sqlx.Stmt //8 байт (только указатель)
 }
 
-// GetPostgresStorage возвращает хранилище данных в Postgres (создает, если его не было ранее)
-func NewPostgresStorage(connectionString string) (*postgresStorage, error) {
+// PostgresStorage возвращает хранилище данных в Postgres (создает, если его не было ранее)
+func PostgresStorage(connectionString string) (*postgresStorage, error) {
 	var (
 		dbErr error
 		db    *sqlx.DB

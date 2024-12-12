@@ -1,3 +1,8 @@
+/*
+		Package core отражает предметную область.
+		Для минимизации размера padding bytes, все fields определены от highest allocation to lowest allocation.
+	    Это положит любые обязательные padding bytes на "дно" структур и уменьшит общий размер обязательных padding bytes
+*/
 package core
 
 import "context"

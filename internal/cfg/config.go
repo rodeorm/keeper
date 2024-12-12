@@ -1,9 +1,4 @@
-/*
-		Package core отражает предметную область.
-		Для минимизации размера padding bytes, все fields определены от highest allocation to lowest allocation.
-	    Это положит любые обязательные padding bytes на "дно" структур и уменьшит общий размер обязательных padding bytes
-*/
-package core
+package cfg
 
 //ServerConfig - конфигурация сервера
 type ServerConfig struct {
@@ -13,13 +8,15 @@ type ServerConfig struct {
 	SSLKey                  string `yaml:"SSL_SERTIFICATE_KEY_RELATIVE_PATH"` //Путь к ключу SSL
 	DBTest                  string `yaml:"DB_TEST"`                           //Адрес тестового сервера БД
 	SMTPServer              string `yaml:"SMTP_SERVER"`                       //Адрес сервера электронной почты
+	SMTPPort                int    `yaml:"SMTP_PORT"`                         //Порт сервера электронной почты
 	SMTPLogin               string `yaml:"SMTP_LOGIN"`                        //Логин сервера электронной почты
 	SMTPPass                string `yaml:"SMTP_PASSWORD"`                     //Пароль сервера электронной почты
 	MaleTemplate            string `yaml:"MALE_TEMPLATE"`                     //Шаблон для сообщений электронной почты
 	PasswordKey             string `yaml:"PASSWORD_KEY"`                      //Ключ для шифрования JWT токена
 	OneTimePasswordLiveTime int    `yaml:"OTP_LIVE_TIME"`                     //Время жизни пароля для двухфакторной авторизации
 	TokenLiveTime           int    `yaml:"TOKEN_LIVE_TIME"`                   //Время жизни авторизационного токена
-	MessageBatchSize        int    `yaml:"MESSAGE_BATCH_SIZE"`                //Время жизни авторизационного токена
+	MessagePeriod           int    `yaml:"MESSAGE_PERIOD"`                    //Периодичность отправки сообщений
+	SenderQuantity          int    `yaml:"SENDER_QUANTITY"`                   //Количество отправителей
 }
 
 //ClientConfig - конфигурация клиента

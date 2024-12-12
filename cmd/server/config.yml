@@ -3,11 +3,13 @@ DB_PRODUCTIVE:  postgres://app:qqqQQQ123@localhost:5433/storage?sslmode=disable
 SSL_SERTIFICATE_RELATIVE_PATH: certFile
 SSL_SERTIFICATE_KEY_RELATIVE_PATH: certKey
 DB_TEST: postgres://app:qqqQQQ123@localhost:5433/storage?sslmode=disable
-SMTP_SERVER: 
-SMTP_LOGIN:
-SMTP_PASSWORD:
-MALE_TEMPLATE:
-PASSWORD_KEY:
-OTP_LIVE_TIME:
-TOKEN_LIVE_TIME:
-MESSAGE_BATCH_SIZE: 
+SMTP_SERVER: smtp.yandex.ru
+SMTP_PORT: 465
+SMTP_LOGIN: ilyin-a-l@ya.ru
+SMTP_PASSWORD: xwuunnlcoezfeimq
+MESSAGE_PERIOD: 15
+MALE_TEMPLATE: template.html
+PASSWORD_KEY: verydifficultandstrong
+OTP_LIVE_TIME: 1
+TOKEN_LIVE_TIME: 1
+SENDER_QUANTITY: 3
