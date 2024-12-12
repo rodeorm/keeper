@@ -7,11 +7,22 @@ option go_package = "keeper/internal/grpc/proto";
 service KeeperService {
     rpc Reg(RegRequest) returns (RegResponse);
     rpc Auth(AuthRequest) returns (AuthResponse);
-    rpc CreateData(CreateDataRequest) returns (CreateDataResponse);
-    rpc ReadData(ReadDataRequest) returns (stream ReadDataResponse);
-    rpc ReadAllData(ReadAllDataRequest) returns (ReadAllDataResponse);
-    rpc UpdateData(UpdateDataRequest) returns (UpdateDataResponse);
-    rpc DeleteData(DeleteDataRequest) returns (DeleteDataResponse);
+    rpc CreateCouple(CreateCoupleRequest) returns (CreateCoupleResponse);
+    rpc CreateCard(CreateCardRequest) returns (CreateCardResponse);
+    rpc CreateBinary(CreateBinaryRequest) returns (CreateBinaryResponse);
+    rpc CreateText(CreateTextRequest) returns (CreateTextResponse);
+    rpc ReadAllCouples(ReadAllCouplesRequest) returns (ReadAllCouplesResponse);
+    rpc ReadAllCards(ReadAllCardsRequest) returns (ReadAllCardsResponse);
+    rpc ReadAllBinaries(ReadAllBinariesRequest) returns (ReadAllBinariesResponse);
+    rpc ReadAllTexts(ReadAllTextsRequest) returns (ReadAllTextsResponse);
+    rpc ReadCouple(ReadCoupleRequest) returns (ReadCoupleResponse);
+    rpc ReadCard(ReadCardRequest) returns (ReadCardResponse);
+    rpc ReadBinary(ReadBinaryRequest) returns (ReadBinaryResponse);
+    rpc ReadText(ReadTextRequest) returns (ReadTextResponse);
+    rpc DeleteCouple(DeleteCoupleRequest) returns (DeleteCoupleResponse);
+    rpc DeleteCard(DeleteCardRequest) returns (DeleteCardResponse);
+    rpc DeleteBinary(DeleteBinaryRequest) returns (DeleteBinaryResponse);
+    rpc DeleteText(DeleteTextRequest) returns (DeleteTextResponse);
 }
 
 message DataType {
@@ -76,63 +87,137 @@ message AuthRequest {
 message AuthResponse {
     string message = 1; 
 }
-message CreateDataRequest{
-    DataType dataType = 1;
-    Couple couple  = 2;
-    Card card = 3;
-    Binary binary = 4;
-    Text text = 5;
-}
-
-message CreateDataResponse{
-
-}
-message ReadDataRequest{
-    DataType dataType = 1;
-}
-message ReadDataResponse{
-    DataType dataType = 1;
-    Couple couple  = 2;
-    Card card = 3;
-    Binary binary = 4;
-    Text text = 5;
-}
-
-message ReadAllDataRequest{
-    DataType dataType = 1;
-}
-message ReadAllDataResponse{
-    DataType dataType = 1;
-    repeated Couple couples  = 2;
-    repeated Card cards = 3;
-    repeated Binary binaries = 4;
-    repeated Text text = 5;
-}
 
 
-message UpdateDataRequest{
-    DataType dataType = 1; // Тип обновляемой записи
-    int32 id = 2; // Идентификатор обновляемой записи
-    Couple couple  = 3;
-    Card card = 4;
-    Binary binary = 5;
-    Text text = 6;
+message CreateCoupleRequest {
+    string login = 1;
+    Couple couple = 2;
 }
 
-message UpdateDataResponse{
-    DataType dataType = 1; // Тип обновленной записи
-    int32 id = 2; // Идентификатор обновленной записи
-    Couple couple  = 3;
-    Card card = 4;
-    Binary binary = 5;
-    Text text = 6;
+message CreateCoupleResponse{
+}
+
+message CreateCardRequest{
+    string login = 1;
+    Card card = 2;
+}
+
+message CreateCardResponse{
+}
+
+message CreateBinaryRequest{
+    string login = 1;
+    Binary binary = 2;
+}
+
+message CreateBinaryResponse{
+}
+
+message CreateTextRequest{
+    string login = 1;
+    Text text = 2;
+}
+
+message CreateTextResponse{
+}
+
+message ReadAllCouplesRequest{
+    string login = 1;
+}
+
+message ReadAllCouplesResponse{
+    repeated Couple couples  = 1;
+}
+
+message ReadAllCardsRequest{
+    string login = 1;
+}
+
+message ReadAllCardsResponse{
+    repeated Card cards  = 1;
+}
+
+message ReadAllBinariesRequest{
+    string login = 1;
+}
+
+message ReadAllBinariesResponse{
+    repeated Binary binaries  = 1;
+}
+
+message ReadAllTextsRequest{
+    string login = 1;
+}
+
+message ReadAllTextsResponse{
+    repeated Text texts  = 1;
+}
+
+message ReadCoupleRequest{
+    string login = 1;
+    Couple couple = 2;
+}
+
+message ReadCoupleResponse{
+    Couple couple = 1;
+}
+
+message ReadCardRequest{
+    string login = 1;
+    Card card = 2;
+}
+
+message ReadCardResponse{
+    Card card = 2;
+}
+
+message ReadBinaryRequest{
+    string login = 1;
+    Binary binary = 2;
+}
+
+message ReadBinaryResponse {
+    Binary binary = 1;
+}
+
+message ReadTextRequest{
+    string login = 1;
+    Text text = 2;
+}
+
+message ReadTextResponse{
+    Text text = 1;
 }
 
 
-message DeleteDataRequest{
-    DataType dataType = 1; // Тип обновляемой записи
-    int32 id = 2; // Идентификатор обновляемой записи
+message DeleteCoupleRequest{
+    string login = 1;
+    Couple couple = 2;
 }
 
-message DeleteDataResponse{
+message DeleteCoupleResponse{
+}
+
+message DeleteCardRequest{
+    string login = 1;
+    Card card = 2;
+}
+
+message DeleteCardResponse{
+}
+
+message DeleteBinaryRequest{
+    string login = 1;
+    Binary binary = 2;
+}
+
+message DeleteBinaryResponse {
+}
+
+message DeleteTextRequest{
+    string login = 1;
+    Text text = 2;
+}
+
+message DeleteTextResponse{
 }

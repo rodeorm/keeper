@@ -2,7 +2,7 @@
 // versions:
 // - protoc-gen-go-grpc v1.5.1
 // - protoc             v5.29.0--rc3
-// source: internal/grpc/proto/keeper.proto
+// source: keeper.proto
 
 package proto
 
@@ -19,13 +19,24 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	KeeperService_Reg_FullMethodName         = "/keeper.KeeperService/Reg"
-	KeeperService_Auth_FullMethodName        = "/keeper.KeeperService/Auth"
-	KeeperService_CreateData_FullMethodName  = "/keeper.KeeperService/CreateData"
-	KeeperService_ReadData_FullMethodName    = "/keeper.KeeperService/ReadData"
-	KeeperService_ReadAllData_FullMethodName = "/keeper.KeeperService/ReadAllData"
-	KeeperService_UpdateData_FullMethodName  = "/keeper.KeeperService/UpdateData"
-	KeeperService_DeleteData_FullMethodName  = "/keeper.KeeperService/DeleteData"
+	KeeperService_Reg_FullMethodName             = "/keeper.KeeperService/Reg"
+	KeeperService_Auth_FullMethodName            = "/keeper.KeeperService/Auth"
+	KeeperService_CreateCouple_FullMethodName    = "/keeper.KeeperService/CreateCouple"
+	KeeperService_CreateCard_FullMethodName      = "/keeper.KeeperService/CreateCard"
+	KeeperService_CreateBinary_FullMethodName    = "/keeper.KeeperService/CreateBinary"
+	KeeperService_CreateText_FullMethodName      = "/keeper.KeeperService/CreateText"
+	KeeperService_ReadAllCouples_FullMethodName  = "/keeper.KeeperService/ReadAllCouples"
+	KeeperService_ReadAllCards_FullMethodName    = "/keeper.KeeperService/ReadAllCards"
+	KeeperService_ReadAllBinaries_FullMethodName = "/keeper.KeeperService/ReadAllBinaries"
+	KeeperService_ReadAllTexts_FullMethodName    = "/keeper.KeeperService/ReadAllTexts"
+	KeeperService_ReadCouple_FullMethodName      = "/keeper.KeeperService/ReadCouple"
+	KeeperService_ReadCard_FullMethodName        = "/keeper.KeeperService/ReadCard"
+	KeeperService_ReadBinary_FullMethodName      = "/keeper.KeeperService/ReadBinary"
+	KeeperService_ReadText_FullMethodName        = "/keeper.KeeperService/ReadText"
+	KeeperService_DeleteCouple_FullMethodName    = "/keeper.KeeperService/DeleteCouple"
+	KeeperService_DeleteCard_FullMethodName      = "/keeper.KeeperService/DeleteCard"
+	KeeperService_DeleteBinary_FullMethodName    = "/keeper.KeeperService/DeleteBinary"
+	KeeperService_DeleteText_FullMethodName      = "/keeper.KeeperService/DeleteText"
 )
 
 // KeeperServiceClient is the client API for KeeperService service.
@@ -34,11 +45,22 @@ const (
 type KeeperServiceClient interface {
 	Reg(ctx context.Context, in *RegRequest, opts ...grpc.CallOption) (*RegResponse, error)
 	Auth(ctx context.Context, in *AuthRequest, opts ...grpc.CallOption) (*AuthResponse, error)
-	CreateData(ctx context.Context, in *CreateDataRequest, opts ...grpc.CallOption) (*CreateDataResponse, error)
-	ReadData(ctx context.Context, in *ReadDataRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[ReadDataResponse], error)
-	ReadAllData(ctx context.Context, in *ReadAllDataRequest, opts ...grpc.CallOption) (*ReadAllDataResponse, error)
-	UpdateData(ctx context.Context, in *UpdateDataRequest, opts ...grpc.CallOption) (*UpdateDataResponse, error)
-	DeleteData(ctx context.Context, in *DeleteDataRequest, opts ...grpc.CallOption) (*DeleteDataResponse, error)
+	CreateCouple(ctx context.Context, in *CreateCoupleRequest, opts ...grpc.CallOption) (*CreateCoupleResponse, error)
+	CreateCard(ctx context.Context, in *CreateCardRequest, opts ...grpc.CallOption) (*CreateCardResponse, error)
+	CreateBinary(ctx context.Context, in *CreateBinaryRequest, opts ...grpc.CallOption) (*CreateBinaryResponse, error)
+	CreateText(ctx context.Context, in *CreateTextRequest, opts ...grpc.CallOption) (*CreateTextResponse, error)
+	ReadAllCouples(ctx context.Context, in *ReadAllCouplesRequest, opts ...grpc.CallOption) (*ReadAllCouplesResponse, error)
+	ReadAllCards(ctx context.Context, in *ReadAllCardsRequest, opts ...grpc.CallOption) (*ReadAllCardsResponse, error)
+	ReadAllBinaries(ctx context.Context, in *ReadAllBinariesRequest, opts ...grpc.CallOption) (*ReadAllBinariesResponse, error)
+	ReadAllTexts(ctx context.Context, in *ReadAllTextsRequest, opts ...grpc.CallOption) (*ReadAllTextsResponse, error)
+	ReadCouple(ctx context.Context, in *ReadCoupleRequest, opts ...grpc.CallOption) (*ReadCoupleResponse, error)
+	ReadCard(ctx context.Context, in *ReadCardRequest, opts ...grpc.CallOption) (*ReadCardResponse, error)
+	ReadBinary(ctx context.Context, in *ReadBinaryRequest, opts ...grpc.CallOption) (*ReadBinaryResponse, error)
+	ReadText(ctx context.Context, in *ReadTextRequest, opts ...grpc.CallOption) (*ReadTextResponse, error)
+	DeleteCouple(ctx context.Context, in *DeleteCoupleRequest, opts ...grpc.CallOption) (*DeleteCoupleResponse, error)
+	DeleteCard(ctx context.Context, in *DeleteCardRequest, opts ...grpc.CallOption) (*DeleteCardResponse, error)
+	DeleteBinary(ctx context.Context, in *DeleteBinaryRequest, opts ...grpc.CallOption) (*DeleteBinaryResponse, error)
+	DeleteText(ctx context.Context, in *DeleteTextRequest, opts ...grpc.CallOption) (*DeleteTextResponse, error)
 }
 
 type keeperServiceClient struct {
@@ -69,59 +91,160 @@ func (c *keeperServiceClient) Auth(ctx context.Context, in *AuthRequest, opts ..
 	return out, nil
 }
 
-func (c *keeperServiceClient) CreateData(ctx context.Context, in *CreateDataRequest, opts ...grpc.CallOption) (*CreateDataResponse, error) {
+func (c *keeperServiceClient) CreateCouple(ctx context.Context, in *CreateCoupleRequest, opts ...grpc.CallOption) (*CreateCoupleResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(CreateDataResponse)
-	err := c.cc.Invoke(ctx, KeeperService_CreateData_FullMethodName, in, out, cOpts...)
+	out := new(CreateCoupleResponse)
+	err := c.cc.Invoke(ctx, KeeperService_CreateCouple_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *keeperServiceClient) ReadData(ctx context.Context, in *ReadDataRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[ReadDataResponse], error) {
+func (c *keeperServiceClient) CreateCard(ctx context.Context, in *CreateCardRequest, opts ...grpc.CallOption) (*CreateCardResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	stream, err := c.cc.NewStream(ctx, &KeeperService_ServiceDesc.Streams[0], KeeperService_ReadData_FullMethodName, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	x := &grpc.GenericClientStream[ReadDataRequest, ReadDataResponse]{ClientStream: stream}
-	if err := x.ClientStream.SendMsg(in); err != nil {
-		return nil, err
-	}
-	if err := x.ClientStream.CloseSend(); err != nil {
-		return nil, err
-	}
-	return x, nil
-}
-
-// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type KeeperService_ReadDataClient = grpc.ServerStreamingClient[ReadDataResponse]
-
-func (c *keeperServiceClient) ReadAllData(ctx context.Context, in *ReadAllDataRequest, opts ...grpc.CallOption) (*ReadAllDataResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ReadAllDataResponse)
-	err := c.cc.Invoke(ctx, KeeperService_ReadAllData_FullMethodName, in, out, cOpts...)
+	out := new(CreateCardResponse)
+	err := c.cc.Invoke(ctx, KeeperService_CreateCard_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *keeperServiceClient) UpdateData(ctx context.Context, in *UpdateDataRequest, opts ...grpc.CallOption) (*UpdateDataResponse, error) {
+func (c *keeperServiceClient) CreateBinary(ctx context.Context, in *CreateBinaryRequest, opts ...grpc.CallOption) (*CreateBinaryResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(UpdateDataResponse)
-	err := c.cc.Invoke(ctx, KeeperService_UpdateData_FullMethodName, in, out, cOpts...)
+	out := new(CreateBinaryResponse)
+	err := c.cc.Invoke(ctx, KeeperService_CreateBinary_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *keeperServiceClient) DeleteData(ctx context.Context, in *DeleteDataRequest, opts ...grpc.CallOption) (*DeleteDataResponse, error) {
+func (c *keeperServiceClient) CreateText(ctx context.Context, in *CreateTextRequest, opts ...grpc.CallOption) (*CreateTextResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(DeleteDataResponse)
-	err := c.cc.Invoke(ctx, KeeperService_DeleteData_FullMethodName, in, out, cOpts...)
+	out := new(CreateTextResponse)
+	err := c.cc.Invoke(ctx, KeeperService_CreateText_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *keeperServiceClient) ReadAllCouples(ctx context.Context, in *ReadAllCouplesRequest, opts ...grpc.CallOption) (*ReadAllCouplesResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ReadAllCouplesResponse)
+	err := c.cc.Invoke(ctx, KeeperService_ReadAllCouples_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *keeperServiceClient) ReadAllCards(ctx context.Context, in *ReadAllCardsRequest, opts ...grpc.CallOption) (*ReadAllCardsResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ReadAllCardsResponse)
+	err := c.cc.Invoke(ctx, KeeperService_ReadAllCards_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *keeperServiceClient) ReadAllBinaries(ctx context.Context, in *ReadAllBinariesRequest, opts ...grpc.CallOption) (*ReadAllBinariesResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ReadAllBinariesResponse)
+	err := c.cc.Invoke(ctx, KeeperService_ReadAllBinaries_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *keeperServiceClient) ReadAllTexts(ctx context.Context, in *ReadAllTextsRequest, opts ...grpc.CallOption) (*ReadAllTextsResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ReadAllTextsResponse)
+	err := c.cc.Invoke(ctx, KeeperService_ReadAllTexts_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *keeperServiceClient) ReadCouple(ctx context.Context, in *ReadCoupleRequest, opts ...grpc.CallOption) (*ReadCoupleResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ReadCoupleResponse)
+	err := c.cc.Invoke(ctx, KeeperService_ReadCouple_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *keeperServiceClient) ReadCard(ctx context.Context, in *ReadCardRequest, opts ...grpc.CallOption) (*ReadCardResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ReadCardResponse)
+	err := c.cc.Invoke(ctx, KeeperService_ReadCard_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *keeperServiceClient) ReadBinary(ctx context.Context, in *ReadBinaryRequest, opts ...grpc.CallOption) (*ReadBinaryResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ReadBinaryResponse)
+	err := c.cc.Invoke(ctx, KeeperService_ReadBinary_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *keeperServiceClient) ReadText(ctx context.Context, in *ReadTextRequest, opts ...grpc.CallOption) (*ReadTextResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ReadTextResponse)
+	err := c.cc.Invoke(ctx, KeeperService_ReadText_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *keeperServiceClient) DeleteCouple(ctx context.Context, in *DeleteCoupleRequest, opts ...grpc.CallOption) (*DeleteCoupleResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(DeleteCoupleResponse)
+	err := c.cc.Invoke(ctx, KeeperService_DeleteCouple_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *keeperServiceClient) DeleteCard(ctx context.Context, in *DeleteCardRequest, opts ...grpc.CallOption) (*DeleteCardResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(DeleteCardResponse)
+	err := c.cc.Invoke(ctx, KeeperService_DeleteCard_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *keeperServiceClient) DeleteBinary(ctx context.Context, in *DeleteBinaryRequest, opts ...grpc.CallOption) (*DeleteBinaryResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(DeleteBinaryResponse)
+	err := c.cc.Invoke(ctx, KeeperService_DeleteBinary_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *keeperServiceClient) DeleteText(ctx context.Context, in *DeleteTextRequest, opts ...grpc.CallOption) (*DeleteTextResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(DeleteTextResponse)
+	err := c.cc.Invoke(ctx, KeeperService_DeleteText_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -134,11 +257,22 @@ func (c *keeperServiceClient) DeleteData(ctx context.Context, in *DeleteDataRequ
 type KeeperServiceServer interface {
 	Reg(context.Context, *RegRequest) (*RegResponse, error)
 	Auth(context.Context, *AuthRequest) (*AuthResponse, error)
-	CreateData(context.Context, *CreateDataRequest) (*CreateDataResponse, error)
-	ReadData(*ReadDataRequest, grpc.ServerStreamingServer[ReadDataResponse]) error
-	ReadAllData(context.Context, *ReadAllDataRequest) (*ReadAllDataResponse, error)
-	UpdateData(context.Context, *UpdateDataRequest) (*UpdateDataResponse, error)
-	DeleteData(context.Context, *DeleteDataRequest) (*DeleteDataResponse, error)
+	CreateCouple(context.Context, *CreateCoupleRequest) (*CreateCoupleResponse, error)
+	CreateCard(context.Context, *CreateCardRequest) (*CreateCardResponse, error)
+	CreateBinary(context.Context, *CreateBinaryRequest) (*CreateBinaryResponse, error)
+	CreateText(context.Context, *CreateTextRequest) (*CreateTextResponse, error)
+	ReadAllCouples(context.Context, *ReadAllCouplesRequest) (*ReadAllCouplesResponse, error)
+	ReadAllCards(context.Context, *ReadAllCardsRequest) (*ReadAllCardsResponse, error)
+	ReadAllBinaries(context.Context, *ReadAllBinariesRequest) (*ReadAllBinariesResponse, error)
+	ReadAllTexts(context.Context, *ReadAllTextsRequest) (*ReadAllTextsResponse, error)
+	ReadCouple(context.Context, *ReadCoupleRequest) (*ReadCoupleResponse, error)
+	ReadCard(context.Context, *ReadCardRequest) (*ReadCardResponse, error)
+	ReadBinary(context.Context, *ReadBinaryRequest) (*ReadBinaryResponse, error)
+	ReadText(context.Context, *ReadTextRequest) (*ReadTextResponse, error)
+	DeleteCouple(context.Context, *DeleteCoupleRequest) (*DeleteCoupleResponse, error)
+	DeleteCard(context.Context, *DeleteCardRequest) (*DeleteCardResponse, error)
+	DeleteBinary(context.Context, *DeleteBinaryRequest) (*DeleteBinaryResponse, error)
+	DeleteText(context.Context, *DeleteTextRequest) (*DeleteTextResponse, error)
 	mustEmbedUnimplementedKeeperServiceServer()
 }
 
@@ -155,20 +289,53 @@ func (UnimplementedKeeperServiceServer) Reg(context.Context, *RegRequest) (*RegR
 func (UnimplementedKeeperServiceServer) Auth(context.Context, *AuthRequest) (*AuthResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Auth not implemented")
 }
-func (UnimplementedKeeperServiceServer) CreateData(context.Context, *CreateDataRequest) (*CreateDataResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method CreateData not implemented")
+func (UnimplementedKeeperServiceServer) CreateCouple(context.Context, *CreateCoupleRequest) (*CreateCoupleResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateCouple not implemented")
 }
-func (UnimplementedKeeperServiceServer) ReadData(*ReadDataRequest, grpc.ServerStreamingServer[ReadDataResponse]) error {
-	return status.Errorf(codes.Unimplemented, "method ReadData not implemented")
+func (UnimplementedKeeperServiceServer) CreateCard(context.Context, *CreateCardRequest) (*CreateCardResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateCard not implemented")
 }
-func (UnimplementedKeeperServiceServer) ReadAllData(context.Context, *ReadAllDataRequest) (*ReadAllDataResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ReadAllData not implemented")
+func (UnimplementedKeeperServiceServer) CreateBinary(context.Context, *CreateBinaryRequest) (*CreateBinaryResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateBinary not implemented")
 }
-func (UnimplementedKeeperServiceServer) UpdateData(context.Context, *UpdateDataRequest) (*UpdateDataResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpdateData not implemented")
+func (UnimplementedKeeperServiceServer) CreateText(context.Context, *CreateTextRequest) (*CreateTextResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateText not implemented")
 }
-func (UnimplementedKeeperServiceServer) DeleteData(context.Context, *DeleteDataRequest) (*DeleteDataResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method DeleteData not implemented")
+func (UnimplementedKeeperServiceServer) ReadAllCouples(context.Context, *ReadAllCouplesRequest) (*ReadAllCouplesResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ReadAllCouples not implemented")
+}
+func (UnimplementedKeeperServiceServer) ReadAllCards(context.Context, *ReadAllCardsRequest) (*ReadAllCardsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ReadAllCards not implemented")
+}
+func (UnimplementedKeeperServiceServer) ReadAllBinaries(context.Context, *ReadAllBinariesRequest) (*ReadAllBinariesResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ReadAllBinaries not implemented")
+}
+func (UnimplementedKeeperServiceServer) ReadAllTexts(context.Context, *ReadAllTextsRequest) (*ReadAllTextsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ReadAllTexts not implemented")
+}
+func (UnimplementedKeeperServiceServer) ReadCouple(context.Context, *ReadCoupleRequest) (*ReadCoupleResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ReadCouple not implemented")
+}
+func (UnimplementedKeeperServiceServer) ReadCard(context.Context, *ReadCardRequest) (*ReadCardResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ReadCard not implemented")
+}
+func (UnimplementedKeeperServiceServer) ReadBinary(context.Context, *ReadBinaryRequest) (*ReadBinaryResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ReadBinary not implemented")
+}
+func (UnimplementedKeeperServiceServer) ReadText(context.Context, *ReadTextRequest) (*ReadTextResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ReadText not implemented")
+}
+func (UnimplementedKeeperServiceServer) DeleteCouple(context.Context, *DeleteCoupleRequest) (*DeleteCoupleResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteCouple not implemented")
+}
+func (UnimplementedKeeperServiceServer) DeleteCard(context.Context, *DeleteCardRequest) (*DeleteCardResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteCard not implemented")
+}
+func (UnimplementedKeeperServiceServer) DeleteBinary(context.Context, *DeleteBinaryRequest) (*DeleteBinaryResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteBinary not implemented")
+}
+func (UnimplementedKeeperServiceServer) DeleteText(context.Context, *DeleteTextRequest) (*DeleteTextResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteText not implemented")
 }
 func (UnimplementedKeeperServiceServer) mustEmbedUnimplementedKeeperServiceServer() {}
 func (UnimplementedKeeperServiceServer) testEmbeddedByValue()                       {}
@@ -227,85 +394,290 @@ func _KeeperService_Auth_Handler(srv interface{}, ctx context.Context, dec func(
 	return interceptor(ctx, in, info, handler)
 }
 
-func _KeeperService_CreateData_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CreateDataRequest)
+func _KeeperService_CreateCouple_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateCoupleRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(KeeperServiceServer).CreateData(ctx, in)
+		return srv.(KeeperServiceServer).CreateCouple(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: KeeperService_CreateData_FullMethodName,
+		FullMethod: KeeperService_CreateCouple_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(KeeperServiceServer).CreateData(ctx, req.(*CreateDataRequest))
+		return srv.(KeeperServiceServer).CreateCouple(ctx, req.(*CreateCoupleRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _KeeperService_ReadData_Handler(srv interface{}, stream grpc.ServerStream) error {
-	m := new(ReadDataRequest)
-	if err := stream.RecvMsg(m); err != nil {
-		return err
-	}
-	return srv.(KeeperServiceServer).ReadData(m, &grpc.GenericServerStream[ReadDataRequest, ReadDataResponse]{ServerStream: stream})
-}
-
-// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type KeeperService_ReadDataServer = grpc.ServerStreamingServer[ReadDataResponse]
-
-func _KeeperService_ReadAllData_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ReadAllDataRequest)
+func _KeeperService_CreateCard_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateCardRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(KeeperServiceServer).ReadAllData(ctx, in)
+		return srv.(KeeperServiceServer).CreateCard(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: KeeperService_ReadAllData_FullMethodName,
+		FullMethod: KeeperService_CreateCard_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(KeeperServiceServer).ReadAllData(ctx, req.(*ReadAllDataRequest))
+		return srv.(KeeperServiceServer).CreateCard(ctx, req.(*CreateCardRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _KeeperService_UpdateData_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UpdateDataRequest)
+func _KeeperService_CreateBinary_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateBinaryRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(KeeperServiceServer).UpdateData(ctx, in)
+		return srv.(KeeperServiceServer).CreateBinary(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: KeeperService_UpdateData_FullMethodName,
+		FullMethod: KeeperService_CreateBinary_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(KeeperServiceServer).UpdateData(ctx, req.(*UpdateDataRequest))
+		return srv.(KeeperServiceServer).CreateBinary(ctx, req.(*CreateBinaryRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _KeeperService_DeleteData_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DeleteDataRequest)
+func _KeeperService_CreateText_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateTextRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(KeeperServiceServer).DeleteData(ctx, in)
+		return srv.(KeeperServiceServer).CreateText(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: KeeperService_DeleteData_FullMethodName,
+		FullMethod: KeeperService_CreateText_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(KeeperServiceServer).DeleteData(ctx, req.(*DeleteDataRequest))
+		return srv.(KeeperServiceServer).CreateText(ctx, req.(*CreateTextRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _KeeperService_ReadAllCouples_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ReadAllCouplesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(KeeperServiceServer).ReadAllCouples(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: KeeperService_ReadAllCouples_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(KeeperServiceServer).ReadAllCouples(ctx, req.(*ReadAllCouplesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _KeeperService_ReadAllCards_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ReadAllCardsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(KeeperServiceServer).ReadAllCards(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: KeeperService_ReadAllCards_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(KeeperServiceServer).ReadAllCards(ctx, req.(*ReadAllCardsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _KeeperService_ReadAllBinaries_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ReadAllBinariesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(KeeperServiceServer).ReadAllBinaries(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: KeeperService_ReadAllBinaries_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(KeeperServiceServer).ReadAllBinaries(ctx, req.(*ReadAllBinariesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _KeeperService_ReadAllTexts_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ReadAllTextsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(KeeperServiceServer).ReadAllTexts(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: KeeperService_ReadAllTexts_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(KeeperServiceServer).ReadAllTexts(ctx, req.(*ReadAllTextsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _KeeperService_ReadCouple_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ReadCoupleRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(KeeperServiceServer).ReadCouple(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: KeeperService_ReadCouple_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(KeeperServiceServer).ReadCouple(ctx, req.(*ReadCoupleRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _KeeperService_ReadCard_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ReadCardRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(KeeperServiceServer).ReadCard(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: KeeperService_ReadCard_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(KeeperServiceServer).ReadCard(ctx, req.(*ReadCardRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _KeeperService_ReadBinary_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ReadBinaryRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(KeeperServiceServer).ReadBinary(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: KeeperService_ReadBinary_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(KeeperServiceServer).ReadBinary(ctx, req.(*ReadBinaryRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _KeeperService_ReadText_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ReadTextRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(KeeperServiceServer).ReadText(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: KeeperService_ReadText_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(KeeperServiceServer).ReadText(ctx, req.(*ReadTextRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _KeeperService_DeleteCouple_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteCoupleRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(KeeperServiceServer).DeleteCouple(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: KeeperService_DeleteCouple_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(KeeperServiceServer).DeleteCouple(ctx, req.(*DeleteCoupleRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _KeeperService_DeleteCard_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteCardRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(KeeperServiceServer).DeleteCard(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: KeeperService_DeleteCard_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(KeeperServiceServer).DeleteCard(ctx, req.(*DeleteCardRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _KeeperService_DeleteBinary_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteBinaryRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(KeeperServiceServer).DeleteBinary(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: KeeperService_DeleteBinary_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(KeeperServiceServer).DeleteBinary(ctx, req.(*DeleteBinaryRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _KeeperService_DeleteText_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteTextRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(KeeperServiceServer).DeleteText(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: KeeperService_DeleteText_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(KeeperServiceServer).DeleteText(ctx, req.(*DeleteTextRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -326,28 +698,70 @@ var KeeperService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _KeeperService_Auth_Handler,
 		},
 		{
-			MethodName: "CreateData",
-			Handler:    _KeeperService_CreateData_Handler,
+			MethodName: "CreateCouple",
+			Handler:    _KeeperService_CreateCouple_Handler,
 		},
 		{
-			MethodName: "ReadAllData",
-			Handler:    _KeeperService_ReadAllData_Handler,
+			MethodName: "CreateCard",
+			Handler:    _KeeperService_CreateCard_Handler,
 		},
 		{
-			MethodName: "UpdateData",
-			Handler:    _KeeperService_UpdateData_Handler,
+			MethodName: "CreateBinary",
+			Handler:    _KeeperService_CreateBinary_Handler,
 		},
 		{
-			MethodName: "DeleteData",
-			Handler:    _KeeperService_DeleteData_Handler,
+			MethodName: "CreateText",
+			Handler:    _KeeperService_CreateText_Handler,
+		},
+		{
+			MethodName: "ReadAllCouples",
+			Handler:    _KeeperService_ReadAllCouples_Handler,
+		},
+		{
+			MethodName: "ReadAllCards",
+			Handler:    _KeeperService_ReadAllCards_Handler,
+		},
+		{
+			MethodName: "ReadAllBinaries",
+			Handler:    _KeeperService_ReadAllBinaries_Handler,
+		},
+		{
+			MethodName: "ReadAllTexts",
+			Handler:    _KeeperService_ReadAllTexts_Handler,
+		},
+		{
+			MethodName: "ReadCouple",
+			Handler:    _KeeperService_ReadCouple_Handler,
+		},
+		{
+			MethodName: "ReadCard",
+			Handler:    _KeeperService_ReadCard_Handler,
+		},
+		{
+			MethodName: "ReadBinary",
+			Handler:    _KeeperService_ReadBinary_Handler,
+		},
+		{
+			MethodName: "ReadText",
+			Handler:    _KeeperService_ReadText_Handler,
+		},
+		{
+			MethodName: "DeleteCouple",
+			Handler:    _KeeperService_DeleteCouple_Handler,
+		},
+		{
+			MethodName: "DeleteCard",
+			Handler:    _KeeperService_DeleteCard_Handler,
+		},
+		{
+			MethodName: "DeleteBinary",
+			Handler:    _KeeperService_DeleteBinary_Handler,
+		},
+		{
+			MethodName: "DeleteText",
+			Handler:    _KeeperService_DeleteText_Handler,
 		},
 	},
-	Streams: []grpc.StreamDesc{
-		{
-			StreamName:    "ReadData",
-			Handler:       _KeeperService_ReadData_Handler,
-			ServerStreams: true,
-		},
-	},
-	Metadata: "internal/grpc/proto/keeper.proto",
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "keeper.proto",
 }
