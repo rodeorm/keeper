@@ -18,7 +18,7 @@ func (s *postgresStorage) RegUser(ctx context.Context, u *core.User) error {
 		return err
 	}
 
-	err = s.preparedStatements["RegUser"].QueryRowContext(ctx, u.Login, u.Email, u.Name, u.Phone, passwordHash).Scan(u.ID)
+	err = s.preparedStatements["RegUser"].GetContext(ctx, &u.ID, u.Login, u.Email, u.Name, u.Phone, passwordHash)
 	if err != nil {
 		return err
 	}
@@ -26,15 +26,18 @@ func (s *postgresStorage) RegUser(ctx context.Context, u *core.User) error {
 	// Добавление аутентификационных сообщений не мешает регистрации, чтобы можно было подтвердить адрес и позднее. Время жизни токена ограничено.
 	// Поэтому в транзакцию не завернуто, и ошибка не возвращается
 	m, err := core.NewAuthMessage(u)
-	logger.Log.Error("Ошибка при попытке получить новое авторизационное сообщение при регистрации пользователя",
-		zap.String(u.Login, fmt.Sprintf("Для email %s: %v", u.Email, err)),
-	)
+	if err != nil {
+		logger.Log.Error("Ошибка при попытке получить новое авторизационное сообщение при регистрации пользователя",
+			zap.String(u.Login, fmt.Sprintf("Для email %s: %v", u.Email, err)),
+		)
+	}
 
 	err = s.AddMessage(ctx, m)
-	logger.Log.Error("Ошибка при попытке добавить в БД новое авторизационное сообщение при регистрации пользователя",
-		zap.String(u.Login, fmt.Sprintf("Для email %s: %v", u.Email, err)),
-	)
-
+	if err != nil {
+		logger.Log.Error("Ошибка при попытке добавить в БД новое авторизационное сообщение при регистрации пользователя",
+			zap.String(u.Login, fmt.Sprintf("Для email %s: %v", u.Email, err)),
+		)
+	}
 	return nil
 }
 

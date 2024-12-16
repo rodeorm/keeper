@@ -6,11 +6,17 @@ func (s *postgresStorage) prepareStatements() error {
 	if err != nil {
 		return err
 	}
-	stmtUpdateUser, err := s.DB.Preparex(`UPDATE cmn.Users SET name = $2, email = $3, phone = $4, password = $5 WHERE ID = $1;`)
+	stmtUpdateUser, err := s.DB.Preparex(`UPDATE cmn.Users SET name = $2, email = $3, phone = $4, password = $5, verified = $6 WHERE ID = $1;`)
 	if err != nil {
 		return err
 	}
 	stmtAuthUser, err := s.DB.Preparex(`SELECT Login, Password FROM cmn.Users WHERE Login = $1;`)
+	if err != nil {
+		return err
+	}
+	stmtVerifyUser, err := s.DB.Preparex(`SELECT u.Login FROM cmn.Users AS u
+											INNER JOIN cmn.emails AS e ON u.ID = e.UserID AND e.Used = false
+										  WHERE u.ID = $1 AND e.sendeddate + ($2 * INTERVAL '1 hour') > NOW();`)
 	if err != nil {
 		return err
 	}
@@ -42,7 +48,7 @@ func (s *postgresStorage) prepareStatements() error {
 	if err != nil {
 		return err
 	}
-	stmtAddEmail, err := s.DB.Preparex(`INSERT INTO cmn.Emails (UserID, OTP, Email) SELECT $1, $2, $3`)
+	stmtAddEmail, err := s.DB.Preparex(`INSERT INTO cmn.Emails (UserID, OTP, Email) SELECT $1, $2, $3 RETURNING id;`)
 	if err != nil {
 		return err
 	}
@@ -58,6 +64,7 @@ func (s *postgresStorage) prepareStatements() error {
 	s.preparedStatements["RegUser"] = stmtRegUser
 	s.preparedStatements["UpdateUser"] = stmtUpdateUser
 	s.preparedStatements["AuthUser"] = stmtAuthUser
+	s.preparedStatements["VerifyUser"] = stmtVerifyUser
 	s.preparedStatements["AddByte"] = stmtAddByte
 	s.preparedStatements["SelectByte"] = stmtSelectByte
 	s.preparedStatements["UpdateByte"] = stmtUpdateByte

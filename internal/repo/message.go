@@ -11,7 +11,7 @@ import (
 
 func (s *postgresStorage) AddMessage(ctx context.Context, m *core.Message) error {
 	//`INSERT INTO cmn.Emails (UserID, OTP, Email) SELECT $1, $2, $3`
-	err := s.preparedStatements["AddEmail"].QueryRowContext(ctx, m.UserID, m.OneTimePassword, m.Destination).Scan(m.ID)
+	err := s.preparedStatements["AddEmail"].GetContext(ctx, &m.ID, m.UserID, m.OneTimePassword, m.Destination)
 	if err != nil {
 		return err
 	}
