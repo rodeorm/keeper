@@ -7,6 +7,7 @@ option go_package = "keeper/internal/grpc/proto";
 service KeeperService {
     rpc Reg(RegRequest) returns (RegResponse);
     rpc Auth(AuthRequest) returns (AuthResponse);
+    rpc Quit(QuitRequest) returns (QuitResponse);
     rpc CreateCouple(CreateCoupleRequest) returns (CreateCoupleResponse);
     rpc CreateCard(CreateCardRequest) returns (CreateCardResponse);
     rpc CreateBinary(CreateBinaryRequest) returns (CreateBinaryResponse);
@@ -220,4 +221,10 @@ message DeleteTextRequest{
 }
 
 message DeleteTextResponse{
+}
+
+message QuitRequest {
+}
+
+message QuitResponse {
 }

@@ -1,6 +1,8 @@
 package main
 
-import "flag"
+import (
+	"flag"
+)
 
 var (
 	c *string // путь к конфигурационному файлу

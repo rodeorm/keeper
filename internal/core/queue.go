@@ -1,7 +1,6 @@
 package core
 
 import (
-	"log"
 	"sync"
 )
 
@@ -30,7 +29,6 @@ func NewQueue(n int) *Queue {
 	q := &Queue{
 		ch: make(chan *Message, n),
 	}
-	log.Println("Создали очередь", q)
 	return q
 }
 

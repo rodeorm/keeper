@@ -1,13 +1,13 @@
 RUN_ADDRESS: localhost:8080
-DB_PRODUCTIVE:  postgres://app:qqqQQQ123@localhost:5433/storage?sslmode=disable
+DB_PRODUCTIVE:  postgres://app:qqqQQQ123@localhost:5432/keeper?sslmode=disable
 SSL_SERTIFICATE_RELATIVE_PATH: certFile
 SSL_SERTIFICATE_KEY_RELATIVE_PATH: certKey
-DB_TEST: postgres://app:qqqQQQ123@localhost:5433/storage?sslmode=disable
+DB_TEST: postgres://app:qqqQQQ123@localhost:5433/keeper?sslmode=disable
 SMTP_SERVER: smtp.yandex.ru
 SMTP_PORT: 465
 SMTP_LOGIN: ilyin-a-l@ya.ru
 SMTP_PASSWORD: xwuunnlcoezfeimq
-MESSAGE_PERIOD: 15
+MESSAGE_PERIOD: 5
 MALE_TEMPLATE: template.html
 PASSWORD_KEY: verydifficultandstrong
 OTP_LIVE_TIME: 1

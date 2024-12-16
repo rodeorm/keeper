@@ -9,16 +9,25 @@ import "context"
 
 // UserStorager абстрагирует хранилище Пользователей
 type UserStorager interface {
+	//RegUser регистрирует пользователя
 	RegUser(context.Context, *User) error
+	//UpdateUser обновляет данные пользователя
 	UpdateUser(context.Context, *User) error
+	//DeleteUser удаляет пользователя
 	DeleteUser(context.Context, *User) error
-	AuthUser(context.Context, *User) error
+	// AuthUser аутентифицирует пользователя по логину-паролю для дальнейшей авторизации
+	AuthUser(context.Context, *User) bool
+	// VerifyUser подтверждение контактные данные пользователя
+	VerifyUser(context.Context, *User) bool
 }
 
-//User - пользователи
+//User - пользователь
 type User struct {
 	Login    string // Логин
 	Password string // Пароль
 	Name     string // Имя
+	Phone    string // Номер телефона
 	Email    string // Адрес электронной почты
+	ID       int    // Уникальный идентификатор
+	Verified bool   // Контактные данные подтверждены
 }

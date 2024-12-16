@@ -1,6 +1,12 @@
 package core
 
-import "context"
+import (
+	"context"
+	"encoding/json"
+	"fmt"
+
+	"github.com/rodeorm/keeper/internal/crypt"
+)
 
 // CoupleStorager  - хранилище логинов-паролей
 type CoupleStorager interface {
@@ -17,4 +23,20 @@ type Couple struct {
 	Password string //16 байт. Пароль
 	Meta     string //16 байт. Мета
 	ID       int    //8 байт. Идентификатор
+}
+
+// DecryptCouple расшифровывает пары логин-пароль
+func DecryptCouple(data, password []byte) (*Couple, error) {
+	// Расшифровываем данные
+	decrypted, err := crypt.Decrypt(data, password)
+	if err != nil {
+		return nil, fmt.Errorf("не получилось")
+	}
+
+	// Преобразуем JSON обратно в структуру
+	var decryptedCouple *Couple
+	if err := json.Unmarshal(decrypted, decryptedCouple); err != nil {
+		return nil, fmt.Errorf("не получилось")
+	}
+	return decryptedCouple, nil
 }

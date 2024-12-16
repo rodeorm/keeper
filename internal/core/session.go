@@ -4,8 +4,6 @@ import (
 	"context"
 	"database/sql"
 	"time"
-
-	"github.com/golang-jwt/jwt"
 )
 
 // SessionStorager абстрагирует хранилище данных сессии
@@ -22,13 +20,4 @@ type Session struct {
 	StartTime      time.Time    //24 байта. Время начала сессии
 	Login          string       //16 байт — 8 байт для указателя и 8 байт для длины. Имя пользователя
 	Client         string       //16 байт — 8 байт для указателя и 8 байт для длины. Имя клиентского приложения, полученное при авторизации
-}
-
-// Claims - это данные сессии, которые использует клиент для подписи своих запросов
-type Claims struct {
-	jwt.StandardClaims        //88 байт
-	Login              string `json:"login"`     //16 байт — 8 байт для указателя и 8 байт для длины. Логин
-	Client             string `json:"clientid"`  //16 байт — 8 байт для указателя и 8 байт для длины. Клиент
-	SessionID          int    `json:"sessionid"` //8 байт. Идентификатор сессии
-
 }

@@ -1,6 +1,8 @@
 package repo
 
 import (
+	"context"
+	"log"
 	"sync"
 
 	_ "github.com/jackc/pgx/v5/stdlib"
@@ -16,8 +18,8 @@ type postgresStorage struct {
 	preparedStatements map[string]*sqlx.Stmt //8 байт (только указатель)
 }
 
-// PostgresStorage возвращает хранилище данных в Postgres (создает, если его не было ранее)
-func PostgresStorage(connectionString string) (*postgresStorage, error) {
+// GetPostgresStorage возвращает хранилище данных в Postgres (создает, если его не было ранее)
+func GetPostgresStorage(connectionString string) (*postgresStorage, error) {
 	var (
 		dbErr error
 		db    *sqlx.DB
@@ -31,13 +33,13 @@ func PostgresStorage(connectionString string) (*postgresStorage, error) {
 				return
 			}
 			ps = &postgresStorage{DB: db, ConnectionString: connectionString, preparedStatements: map[string]*sqlx.Stmt{}}
-			/*
-				ctx := context.TODO()
-					if dbErr = ps.createTables(ctx); dbErr != nil {
-						return
-					}
-			*/
-			logger.Info("GetPostgresStorage", "Postgres storage", connectionString)
+
+			ctx := context.TODO()
+			if dbErr = ps.createTables(ctx); dbErr != nil {
+				log.Println(dbErr)
+				return
+			}
+			dbErr = ps.prepareStatements()
 		})
 
 	if dbErr != nil {

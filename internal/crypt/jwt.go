@@ -6,7 +6,6 @@ import (
 
 	"github.com/golang-jwt/jwt"
 
-	"github.com/rodeorm/keeper/internal/core"
 	"github.com/rodeorm/keeper/internal/logger"
 )
 
@@ -26,9 +25,9 @@ func CodeSession(login string, sessionId int, jwtKey string, tokenLiveTime int) 
 
 // DecodeSession декодирует данные сессии из строки
 // Для этого этой функции надо передать саму строку и ключ, использованный для кодирования
-func DecodeSession(tokenStr, jwtKey string) (*core.Claims, error) {
+func DecodeSession(tokenStr, jwtKey string) (*Claims, error) {
 	key := []byte(jwtKey)
-	claims := &core.Claims{}
+	claims := &Claims{}
 	tkn, err := jwt.ParseWithClaims(tokenStr, claims, func(token *jwt.Token) (interface{}, error) {
 		return key, nil
 	})
@@ -45,15 +44,23 @@ func DecodeSession(tokenStr, jwtKey string) (*core.Claims, error) {
 }
 
 // CreateClaims создает claims для jwt на основании логина, ид сессии и времени жизни
-func createClaims(login string, sessionID, tokenLiveTime int) *core.Claims {
+func createClaims(login string, sessionID, tokenLiveTime int) *Claims {
 	// Срок истечения валидности токена
 	expirationTime := time.Now().Add(time.Duration(tokenLiveTime) * time.Minute)
 
-	return &core.Claims{
+	return &Claims{
 		SessionID: sessionID,
 		Login:     login,
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: expirationTime.Unix(), // в JWT время жизни в Unix миллисекундах
 		},
 	}
+}
+
+// Claims - это данные сессии, которые использует клиент для подписи своих запросов
+type Claims struct {
+	jwt.StandardClaims        //88 байт
+	Login              string `json:"login"`     //16 байт — 8 байт для указателя и 8 байт для длины. Логин
+	Client             string `json:"clientid"`  //16 байт — 8 байт для указателя и 8 байт для длины. Клиент
+	SessionID          int    `json:"sessionid"` //8 байт. Идентификатор сессии
 }
