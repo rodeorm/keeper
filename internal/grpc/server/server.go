@@ -23,8 +23,8 @@ type grpcServer struct {
 	proto.UnimplementedKeeperServiceServer
 }
 
-// ServerStart запускает grpc-сервер
-func ServerStart(cfg *cfg.Server, wg *sync.WaitGroup, exit chan struct{}) error {
+// Start запускает grpc-сервер
+func Start(cfg *cfg.Server, wg *sync.WaitGroup, exit chan struct{}) error {
 	grpcSrv := grpcServer{cfg: cfg}
 	listen, err := net.Listen("tcp", cfg.RunAddress)
 

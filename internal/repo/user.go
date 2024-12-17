@@ -66,13 +66,25 @@ func (s *postgresStorage) AuthUser(ctx context.Context, u *core.User) bool {
 	return authenticated
 }
 
-func (s *postgresStorage) VerifyUser(context.Context, *core.User) bool {
-	//TODO
-	return false
+func (s *postgresStorage) VerifyUserOTP(ctx context.Context, otpLiveTime int, u *core.User) bool {
+	// SELECT e.id FROM cmn.emails AS e WHERE e.UserID = $1 AND e.sendeddate + ($2 * INTERVAL '1 hour') > NOW()
+	// AND e.Used = false AND e.OTP = $3;
+	em := &core.Message{}
+	err := s.preparedStatements["VerifyUser"].GetContext(ctx, em, u.ID, otpLiveTime, u.OTP)
+	if err != nil {
+		logger.Log.Error("не удалось верифицировать OTP",
+			zap.String(u.Login, fmt.Sprintf("одноразовый пароль: %s", u.OTP)),
+		)
+		return false
+	}
+	if em.ID == 0 {
+		return false
+	}
+	return true
 }
 
 func (s *postgresStorage) UpdateUser(context.Context, *core.User) error {
-	//TODO
+
 	return nil
 }
 func (s *postgresStorage) DeleteUser(context.Context, *core.User) error {

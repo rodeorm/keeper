@@ -17,14 +17,15 @@ type UserStorager interface {
 	DeleteUser(context.Context, *User) error
 	// AuthUser аутентифицирует пользователя по логину-паролю для дальнейшей авторизации
 	AuthUser(context.Context, *User) bool
-	// VerifyUser подтверждение контактные данные пользователя
-	VerifyUser(context.Context, *User) bool
+	// VerifyUser подтверждение одноразовый пароль для пользователя
+	VerifyUserOTP(ctx context.Context, otpLiveTime int, u *User) bool
 }
 
 //User - пользователь
 type User struct {
 	Login    string // Логин
 	Password string // Пароль
+	OTP      string // Одноразовый пароль
 	Name     string // Имя
 	Phone    string // Номер телефона
 	Email    string // Адрес электронной почты

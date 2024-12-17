@@ -7,9 +7,12 @@ SMTP_SERVER: smtp.yandex.ru
 SMTP_PORT: 465
 SMTP_LOGIN: ilyin-a-l@ya.ru
 SMTP_PASSWORD: xwuunnlcoezfeimq
-MESSAGE_PERIOD: 5
 MALE_TEMPLATE: template.html
+FROM: ilyin-a-l@yandex.ru
+FILE_NAME: logo.jpg
 PASSWORD_KEY: verydifficultandstrong
 OTP_LIVE_TIME: 1
 TOKEN_LIVE_TIME: 1
-SENDER_QUANTITY: 3
+SENDER_QUANTITY: 2
+MESSAGE_SEND_PERIOD: 1
+QUEUE_FILL_PERIOD: 20

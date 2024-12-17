@@ -14,9 +14,8 @@ func (s *postgresStorage) prepareStatements() error {
 	if err != nil {
 		return err
 	}
-	stmtVerifyUser, err := s.DB.Preparex(`SELECT u.Login FROM cmn.Users AS u
-											INNER JOIN cmn.emails AS e ON u.ID = e.UserID AND e.Used = false
-										  WHERE u.ID = $1 AND e.sendeddate + ($2 * INTERVAL '1 hour') > NOW();`)
+	stmtVerifyUser, err := s.DB.Preparex(`SELECT e.id FROM cmn.emails AS e WHERE e.UserID = $1 AND e.sendeddate + ($2 * INTERVAL '1 hour') > NOW() 
+	AND e.Used = false AND e.OTP = $3; `)
 	if err != nil {
 		return err
 	}
@@ -52,11 +51,11 @@ func (s *postgresStorage) prepareStatements() error {
 	if err != nil {
 		return err
 	}
-	stmtUpdateEmail, err := s.DB.Preparex(`UPDATE cmn.Emails SET OTP = $2, Email = $3, SendedDate = $4 WHERE userid = $1;`)
+	stmtUpdateEmail, err := s.DB.Preparex(`UPDATE cmn.Emails SET OTP = $2, Email = $3, SendedDate = $4, Used = $5, Queued = $6 WHERE id = $1;`)
 	if err != nil {
 		return err
 	}
-	stmtSelectEmailForSending, err := s.DB.Preparex(`SELECT * FROM cmn.Emails WHERE SendedDate IS NULL;`)
+	stmpSelectEmailForSending, err := s.DB.Preparex(`SELECT id, userid, otp, email AS destination FROM cmn.Emails WHERE SendedDate IS NULL AND (Queued IS NULL OR Queued = false);`)
 	if err != nil {
 		return err
 	}
@@ -74,7 +73,7 @@ func (s *postgresStorage) prepareStatements() error {
 	s.preparedStatements["EndSession"] = stmtEndSession
 	s.preparedStatements["AddEmail"] = stmtAddEmail
 	s.preparedStatements["UpdateEmail"] = stmtUpdateEmail
-	s.preparedStatements["SelectEmailForSending"] = stmtSelectEmailForSending
+	s.preparedStatements["SelectEmailForSending"] = stmpSelectEmailForSending
 
 	return nil
 }

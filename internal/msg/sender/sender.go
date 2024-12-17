@@ -1,6 +1,7 @@
 package sender
 
 import (
+	"context"
 	"fmt"
 	"sync"
 	"time"
@@ -16,6 +17,7 @@ import (
 type Sender struct {
 	messageStorage core.MessageStorager //16 байт. Хранилище сообщений
 	from           string               //16 байт. Отправитель
+	fileName       string               //16 байт. Имя файла вложения
 	queue          *core.Queue          //8 байт. Очередь сообщений
 	dialer         *gomail.Dialer       //8 байт. Отправитель
 	ID             int                  //8 байт. Идентификатор воркера
@@ -24,12 +26,14 @@ type Sender struct {
 
 // NewSender создает новый Sender
 // Каждый Sender может рассылать сообщения через свой собственный smtp сервер
-func NewSender(queue *core.Queue, storage core.MessageStorager, id, smtpPort, prd int, smtpServer, smtpLogin, smtpPassword string) *Sender {
+func NewSender(queue *core.Queue, storage core.MessageStorager, id, smtpPort, prd int, smtpServer, smtpLogin, smtpPassword, from, fileName string) *Sender {
 	s := Sender{
 		ID:             id,
 		queue:          queue,
 		messageStorage: storage,
 		period:         prd,
+		from:           from,
+		fileName:       fileName,
 	}
 
 	s.dialer = gomail.NewDialer(smtpServer, smtpPort, smtpLogin, smtpPassword)
@@ -37,7 +41,7 @@ func NewSender(queue *core.Queue, storage core.MessageStorager, id, smtpPort, pr
 	return &s
 }
 
-func SenderStart(config *cfg.Server, wg *sync.WaitGroup, exit chan struct{}) {
+func Start(config *cfg.Server, wg *sync.WaitGroup, exit chan struct{}) {
 	for i := range config.SenderQuantity {
 		// Асинхронно запускаем email сендеры
 		s := NewSender(
@@ -45,10 +49,12 @@ func SenderStart(config *cfg.Server, wg *sync.WaitGroup, exit chan struct{}) {
 			config.MessageStorager,
 			i,
 			config.SMTPPort,
-			config.MessagePeriod,
+			config.MessageSendPeriod,
 			config.SMTPServer,
 			config.SMTPLogin,
 			config.SMTPPass,
+			config.From,
+			config.FileName,
 		)
 
 		go s.StartSending(exit, wg)
@@ -78,16 +84,9 @@ func (s *Sender) StartSending(exit chan struct{}, wg *sync.WaitGroup) {
 			wg_w.Add(1)
 
 			go func() {
-				logger.Log.Info("StartSending",
-					zap.String(fmt.Sprintf("Сендер %d", s.ID), "делает делишки"),
-				)
-
 				ms := s.queue.PopWait()
 
 				if ms == nil {
-					logger.Log.Info("StartSending",
-						zap.String(fmt.Sprintf("Сендер %d", s.ID), "сообщений нет"),
-					)
 					wg_w.Done()
 					return
 				}
@@ -110,20 +109,19 @@ func (s *Sender) StartSending(exit chan struct{}, wg *sync.WaitGroup) {
 
 // Send отправляет сообщение
 func (s *Sender) Send(ms *core.Message) error {
-
-	err := core.PersonifyMessage("mail", "approve", ms)
-	if err != nil {
-		return nil
-	}
-
-	email := newEmail(s.from, ms)
+	email := s.NewEmail(s.from, ms)
 
 	if err := s.dialer.DialAndSend(email.gms); err != nil {
-		logger.Log.Info("Send",
-			zap.String(fmt.Sprintf("Сендер %d отправил сообщение", s.ID), ms.Text),
+		logger.Log.Error("Send",
+			zap.String(fmt.Sprintf("Сендер %d не отправил сообщение", s.ID), err.Error()),
 		)
 		return err
 	}
+
+	ctx := context.TODO()
+	ms.SendedDate.Time = time.Now()
+	ms.SendedDate.Valid = true
+	s.messageStorage.UpdateMessage(ctx, ms)
 
 	return nil
 }

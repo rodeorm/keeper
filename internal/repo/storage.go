@@ -2,11 +2,11 @@ package repo
 
 import (
 	"context"
-	"log"
 	"sync"
 
 	_ "github.com/jackc/pgx/v5/stdlib"
 	"github.com/jmoiron/sqlx"
+	"go.uber.org/zap"
 
 	"github.com/rodeorm/keeper/internal/logger"
 )
@@ -36,14 +36,18 @@ func GetPostgresStorage(connectionString string) (*postgresStorage, error) {
 
 			ctx := context.TODO()
 			if dbErr = ps.createTables(ctx); dbErr != nil {
-				log.Println(dbErr)
+				logger.Log.Error("GetPostgresStorage",
+					zap.String("ошибка при создании таблиц", dbErr.Error()),
+				)
 				return
 			}
 			dbErr = ps.prepareStatements()
 		})
 
 	if dbErr != nil {
-		logger.Error("GetPostgresStorage", "ошибка при инициализации подключения к БД", dbErr.Error())
+		logger.Log.Error("GetPostgresStorage",
+			zap.String("ошибка при инициализации подключения к БД", dbErr.Error()),
+		)
 		return nil, dbErr
 	}
 
