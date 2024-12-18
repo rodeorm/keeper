@@ -10,7 +10,7 @@ import (
 
 // BinaryStorager - хранилище бинарных файлов
 type BinaryStorager interface {
-	AddBinaryByUser(context.Context, *Binary) error
+	AddBinaryByUser(context.Context, *Binary, *User) error
 	SelectBinaryByUser(context.Context, *User) ([]Binary, error)
 	UpdateBinaryByUser(context.Context, *Binary, *User) error
 	DeleteBinaryByUser(context.Context, *Binary, *User) error

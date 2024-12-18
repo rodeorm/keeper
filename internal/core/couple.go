@@ -10,7 +10,7 @@ import (
 
 // CoupleStorager  - хранилище логинов-паролей
 type CoupleStorager interface {
-	AddCoupleByUser(context.Context, *Couple) error
+	AddCoupleByUser(context.Context, *Couple, *User) error
 	SelectCoupleByUser(context.Context, *User) ([]Couple, error)
 	UpdateCoupleByUser(context.Context, *Couple, *User) error
 	DeleteCoupleByUser(context.Context, *Couple, *User) error

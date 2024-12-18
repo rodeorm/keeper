@@ -23,7 +23,7 @@ func (s *postgresStorage) prepareStatements() error {
 	if err != nil {
 		return err
 	}
-	stmtSelectByte, err := s.DB.Preparex(`SELECT id, userid, typeid, bytedata, createddate FROM dbo.Data WHERE userid = $1;`)
+	stmtSelectByte, err := s.DB.Preparex(`SELECT id, bytedata, createddate FROM dbo.Data WHERE userid = $1 AND typeid = $2;`)
 	if err != nil {
 		return err
 	}

@@ -14,7 +14,7 @@ func ConfigurateServer(configFile string) (*Server, error) {
 	srv.MessageQueue = queue
 
 	//Получаем хранилище. Пока одно.
-	storage, err := repo.GetPostgresStorage(srv.DBProd)
+	storage, err := repo.GetPostgresStorage(srv.DBProd, srv.CryptKey)
 	if err != nil {
 		return nil, err
 	}

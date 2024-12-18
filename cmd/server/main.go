@@ -5,7 +5,6 @@ import (
 	"sync"
 
 	"github.com/rodeorm/keeper/internal/cfg"
-	"github.com/rodeorm/keeper/internal/core"
 	"github.com/rodeorm/keeper/internal/grpc/server"
 	"github.com/rodeorm/keeper/internal/msg/filler"
 	"github.com/rodeorm/keeper/internal/msg/sender"
@@ -19,17 +18,7 @@ func main() {
 	}
 
 	ctx := context.TODO()
-
-	usr1 := &core.User{Login: "user1", Password: "12345", Email: "ilyin-a-l@yandex.ru"}
-	usr2 := &core.User{Login: "user2", Password: "12345", Email: "ilyin-a-l@ya.ru"}
-	usr3 := &core.User{Login: "user3", Password: "12345", Email: "ilyin-a-l@ya.ru"}
-	usr4 := &core.User{Login: "user4", Password: "12345", Email: "ilyin-a-l@ya.ru"}
-
-	srv.UserStorager.RegUser(ctx, usr1)
-	srv.UserStorager.RegUser(ctx, usr2)
-	srv.UserStorager.RegUser(ctx, usr3)
-	srv.UserStorager.RegUser(ctx, usr4)
-
+	testStorage(ctx, srv)
 	// Через этот канал горутины узнают, что надо закрываться для изящного завершения работы
 	exit := make(chan struct{})
 	// Через эту группу мы синхронизируем горутины

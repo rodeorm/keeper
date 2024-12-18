@@ -3,6 +3,8 @@ package repo
 import (
 	"context"
 	"fmt"
+
+	"github.com/rodeorm/keeper/internal/core"
 )
 
 // createTables создает таблицы, если они не созданы ранее
@@ -106,6 +108,22 @@ func (s *postgresStorage) createTables(ctx context.Context) error {
 	COMMENT ON COLUMN dbo.Data.CreatedDate 		is 'Время и дата создания данных';`)
 	if err != nil {
 		return fmt.Errorf("%s: %w", "ошибка при создании таблиц", err)
+	}
+	return nil
+}
+
+func (s *postgresStorage) insertRefs(ctx context.Context) error {
+	_, err := s.DB.ExecContext(ctx,
+		`	
+			INSERT INTO dbo.DataTypes (ID, Name)
+			VALUES 
+    		($1, 'Пара логин-пароль'),
+    		($2, 'Бинарный файл'),
+    		($3, 'Текст'),
+    		($4, 'Кредитная карта');
+		`, core.CoupleType, core.BinaryType, core.TextType, core.CardType)
+	if err != nil {
+		return err
 	}
 	return nil
 }

@@ -38,7 +38,7 @@ func Start(cfg *cfg.Server, wg *sync.WaitGroup, exit chan struct{}) error {
 	proto.RegisterKeeperServiceServer(grpcSrv.srv, &grpcSrv)
 
 	logger.Log.Info("grpc server started",
-		zap.String("server gRPC has started on the port: ", cfg.ServerConfig.RunAddress),
+		zap.String("сервер gRPC начал свою работу по адресу: ", cfg.ServerConfig.RunAddress),
 	)
 
 	var g errgroup.Group
