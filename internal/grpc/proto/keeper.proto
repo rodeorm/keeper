@@ -69,10 +69,20 @@ message Text {
     int32 id = 3;
 }
 
+message User {
+    string Login  = 1;   // Логин
+	string Password = 2; // Пароль
+	string OTP = 3;      // Одноразовый пароль
+	string Name  = 4;    // Имя
+	string Phone = 5;    // Номер телефона
+	string Email = 6;    // Адрес электронной почты
+	int64 ID       = 7;    // Уникальный идентификатор
+	bool Verified = 8;   // Контактные данные подтверждены
+}
+
 //RegRequest запрос на регистрацию пользователя
 message RegRequest {
-    string login = 1; // логин для регистрации
-    string password = 2; // пароль для регистрации
+   User user = 1;
 }
 
 //RegResponse ответ на регистрацию пользователя

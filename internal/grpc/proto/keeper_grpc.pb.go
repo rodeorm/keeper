@@ -2,7 +2,7 @@
 // versions:
 // - protoc-gen-go-grpc v1.5.1
 // - protoc             v5.29.0--rc3
-// source: keeper.proto
+// source: internal/grpc/proto/keeper.proto
 
 package proto
 
@@ -21,6 +21,7 @@ const _ = grpc.SupportPackageIsVersion9
 const (
 	KeeperService_Reg_FullMethodName             = "/keeper.KeeperService/Reg"
 	KeeperService_Auth_FullMethodName            = "/keeper.KeeperService/Auth"
+	KeeperService_Quit_FullMethodName            = "/keeper.KeeperService/Quit"
 	KeeperService_CreateCouple_FullMethodName    = "/keeper.KeeperService/CreateCouple"
 	KeeperService_CreateCard_FullMethodName      = "/keeper.KeeperService/CreateCard"
 	KeeperService_CreateBinary_FullMethodName    = "/keeper.KeeperService/CreateBinary"
@@ -45,6 +46,7 @@ const (
 type KeeperServiceClient interface {
 	Reg(ctx context.Context, in *RegRequest, opts ...grpc.CallOption) (*RegResponse, error)
 	Auth(ctx context.Context, in *AuthRequest, opts ...grpc.CallOption) (*AuthResponse, error)
+	Quit(ctx context.Context, in *QuitRequest, opts ...grpc.CallOption) (*QuitResponse, error)
 	CreateCouple(ctx context.Context, in *CreateCoupleRequest, opts ...grpc.CallOption) (*CreateCoupleResponse, error)
 	CreateCard(ctx context.Context, in *CreateCardRequest, opts ...grpc.CallOption) (*CreateCardResponse, error)
 	CreateBinary(ctx context.Context, in *CreateBinaryRequest, opts ...grpc.CallOption) (*CreateBinaryResponse, error)
@@ -85,6 +87,16 @@ func (c *keeperServiceClient) Auth(ctx context.Context, in *AuthRequest, opts ..
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(AuthResponse)
 	err := c.cc.Invoke(ctx, KeeperService_Auth_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *keeperServiceClient) Quit(ctx context.Context, in *QuitRequest, opts ...grpc.CallOption) (*QuitResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(QuitResponse)
+	err := c.cc.Invoke(ctx, KeeperService_Quit_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -257,6 +269,7 @@ func (c *keeperServiceClient) DeleteText(ctx context.Context, in *DeleteTextRequ
 type KeeperServiceServer interface {
 	Reg(context.Context, *RegRequest) (*RegResponse, error)
 	Auth(context.Context, *AuthRequest) (*AuthResponse, error)
+	Quit(context.Context, *QuitRequest) (*QuitResponse, error)
 	CreateCouple(context.Context, *CreateCoupleRequest) (*CreateCoupleResponse, error)
 	CreateCard(context.Context, *CreateCardRequest) (*CreateCardResponse, error)
 	CreateBinary(context.Context, *CreateBinaryRequest) (*CreateBinaryResponse, error)
@@ -288,6 +301,9 @@ func (UnimplementedKeeperServiceServer) Reg(context.Context, *RegRequest) (*RegR
 }
 func (UnimplementedKeeperServiceServer) Auth(context.Context, *AuthRequest) (*AuthResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Auth not implemented")
+}
+func (UnimplementedKeeperServiceServer) Quit(context.Context, *QuitRequest) (*QuitResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Quit not implemented")
 }
 func (UnimplementedKeeperServiceServer) CreateCouple(context.Context, *CreateCoupleRequest) (*CreateCoupleResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateCouple not implemented")
@@ -390,6 +406,24 @@ func _KeeperService_Auth_Handler(srv interface{}, ctx context.Context, dec func(
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(KeeperServiceServer).Auth(ctx, req.(*AuthRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _KeeperService_Quit_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QuitRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(KeeperServiceServer).Quit(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: KeeperService_Quit_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(KeeperServiceServer).Quit(ctx, req.(*QuitRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -698,6 +732,10 @@ var KeeperService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _KeeperService_Auth_Handler,
 		},
 		{
+			MethodName: "Quit",
+			Handler:    _KeeperService_Quit_Handler,
+		},
+		{
 			MethodName: "CreateCouple",
 			Handler:    _KeeperService_CreateCouple_Handler,
 		},
@@ -763,5 +801,5 @@ var KeeperService_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "keeper.proto",
+	Metadata: "internal/grpc/proto/keeper.proto",
 }

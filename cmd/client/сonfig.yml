@@ -1,2 +1,0 @@
-RUN_ADDRESS: localhost:8080
-SERVER_ADDRESS:  postgres://app:qqqQQQ123@localhost:5433/storage?sslmode=disable

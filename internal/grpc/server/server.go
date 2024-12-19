@@ -15,6 +15,8 @@ import (
 	"github.com/rodeorm/keeper/internal/grpc/interc"
 	"github.com/rodeorm/keeper/internal/grpc/proto"
 	"github.com/rodeorm/keeper/internal/logger"
+
+	_ "google.golang.org/grpc/encoding/gzip" // Подключаем сжатие
 )
 
 type grpcServer struct {

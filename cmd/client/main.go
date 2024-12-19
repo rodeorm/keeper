@@ -1,3 +1,16 @@
 package main
 
-// Теоретически у клиентского приложения могла бы быть своя БД, которая будет эффективно синхронизироваться с сервером, но по факту - просто хранилище в памяти будет
+import (
+	"fmt"
+
+	tea "github.com/charmbracelet/bubbletea"
+	"github.com/rodeorm/keeper/internal/cli"
+)
+
+func main() {
+	initModel := cli.InitialModel()
+	p := tea.NewProgram(initModel)
+	if _, err := p.Run(); err != nil {
+		fmt.Println("Ошибка при старте клиентского приложения", err)
+	}
+}
