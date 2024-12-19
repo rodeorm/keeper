@@ -8,7 +8,7 @@ import (
 	"github.com/rodeorm/keeper/internal/core"
 )
 
-func testStorage(ctx context.Context, srv *cfg.Server) {
+func TestStorage(ctx context.Context, srv *cfg.Server) {
 
 	usr1 := &core.User{Login: "user1", Password: "12345", Email: "ilyin-a-l@yandex.ru"}
 

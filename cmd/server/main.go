@@ -1,7 +1,6 @@
 package main
 
 import (
-	"context"
 	"sync"
 
 	"github.com/rodeorm/keeper/internal/cfg"
@@ -18,8 +17,8 @@ func main() {
 	}
 
 	// Это отладочные выводы. Будут удалены сразу как появятся норм тесты
-	ctx := context.TODO()
-	testStorage(ctx, srv)
+	//ctx := context.TODO()
+	// TestStorage(ctx, srv)
 
 	// Через этот канал горутины узнают, что надо закрываться для изящного завершения работы
 	exit := make(chan struct{})

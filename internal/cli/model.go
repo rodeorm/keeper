@@ -3,6 +3,7 @@ package cli
 import (
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/rodeorm/keeper/internal/core"
+	"github.com/rodeorm/keeper/internal/grpc/proto"
 )
 
 // Model— это состояние клиентского приложения. Она содержит данные, которые отображаются пользователю.
@@ -13,15 +14,19 @@ type Model struct {
 	LogoScreen
 	RegScreen
 	AuthScreen
+
+	sc proto.KeeperServiceClient
 }
 
 // InitialModel инициализирует модель со значениями по умолчанию
-func InitialModel() Model {
+func InitialModel(sc proto.KeeperServiceClient) Model {
 	var m Model
 	m.CurrentScreen = "logo"
 	m.LogoScreen = initLogoScreen()
 	m.AuthScreen = initAuthScreen()
 	m.RegScreen = initRegScreen()
+	m.sc = sc
+
 	return m
 }
 

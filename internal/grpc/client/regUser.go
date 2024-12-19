@@ -2,7 +2,6 @@ package client
 
 import (
 	"context"
-	"log"
 	"time"
 
 	"github.com/rodeorm/keeper/internal/core"
@@ -25,7 +24,7 @@ func RegUser(u *core.User, ctx context.Context, c proto.KeeperServiceClient) err
 		},
 	}
 
-	resp, err := c.Reg(ctx, &req, grpc.Header(&header), grpc.Trailer(&trailer))
-	log.Println("получен ответ от grpc сервера для метода Reg", resp, err)
+	_, err := c.Reg(ctx, &req, grpc.Header(&header), grpc.Trailer(&trailer))
+	//log.Println("получен ответ от grpc сервера для метода Reg", resp, err)
 	return err
 }

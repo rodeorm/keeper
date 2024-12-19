@@ -102,8 +102,13 @@ func updateRegScreen(msg tea.Msg, m *Model) (tea.Model, tea.Cmd) {
 				m.Chosen = false
 				m.OTPMessageSended = true
 				m.CurrentScreen = "wait"
-				m.User = core.User{Login: m.RegScreen.Inputs[0].View(), Password: m.RegScreen.Inputs[1].Value()}
-				return m, nil //tea.Quit
+				m.User = core.User{Login: m.RegScreen.Inputs[0].Value(),
+					Password: m.RegScreen.Inputs[1].Value(),
+					Email:    m.RegScreen.Inputs[2].Value(),
+					Name:     m.RegScreen.Inputs[3].Value(),
+				}
+
+				return m, m.RegUser
 			}
 
 			// Cycle indexes

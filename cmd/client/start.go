@@ -1,11 +1,7 @@
 package main
 
 import (
-	"context"
-
 	"github.com/rodeorm/keeper/internal/cfg"
-	"github.com/rodeorm/keeper/internal/core"
-	"github.com/rodeorm/keeper/internal/grpc/client"
 	"github.com/rodeorm/keeper/internal/grpc/proto"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
@@ -16,7 +12,7 @@ import (
 // Для упрощения - не будет локального хранилища на клиенте
 // Аналогично - не будет локально пароля для шифрования данных. Вместо этого - шифрование на сервере общее
 // Валидация данных осуществляется на клиенте
-func start() {
+func newGRPCClient() proto.KeeperServiceClient {
 	config, err := cfg.GetClientConfigFromFile()
 	if err != nil {
 		panic(err)
@@ -26,12 +22,15 @@ func start() {
 	if err != nil {
 		panic(err)
 	}
-	defer conn.Close()
+	//defer conn.Close()
 
 	c := proto.NewKeeperServiceClient(conn)
 
-	ctx := context.Background()
+	/*
+		ctx := context.Background()
 
-	u := core.User{Login: "firstUser", Password: "Thisispassword", Name: "Alexander", Phone: "792592504011", Email: "ilyin-a-l@ya.ru"}
-	client.RegUser(&u, ctx, c)
+		u := core.User{Login: "firstUser", Password: "Thisispassword", Name: "Alexander", Phone: "792592504011", Email: "ilyin-a-l@ya.ru"}
+		client.RegUser(&u, ctx, c)
+	*/
+	return c
 }

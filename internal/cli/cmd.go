@@ -1,13 +1,16 @@
 package cli
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/charmbracelet/bubbles/textinput"
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/rodeorm/keeper/internal/grpc/client"
 )
 
 type SomeMsg struct {
+	Text string
 }
 
 func CmdWithArg(tm []textinput.Model) tea.Cmd {
@@ -18,4 +21,13 @@ func CmdWithArg(tm []textinput.Model) tea.Cmd {
 		}
 		return SomeMsg{}
 	}
+}
+
+func (m *Model) RegUser() tea.Msg {
+	ctx := context.TODO()
+	err := client.RegUser(&m.User, ctx, m.sc)
+	if err != nil {
+		return SomeMsg{Text: err.Error()}
+	}
+	return SomeMsg{}
 }

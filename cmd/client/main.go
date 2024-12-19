@@ -8,8 +8,10 @@ import (
 )
 
 func main() {
-	initModel := cli.InitialModel()
+
+	initModel := cli.InitialModel(newGRPCClient())
 	p := tea.NewProgram(initModel)
+
 	if _, err := p.Run(); err != nil {
 		fmt.Println("Ошибка при старте клиентского приложения", err)
 	}
