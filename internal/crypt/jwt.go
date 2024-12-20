@@ -10,10 +10,10 @@ import (
 )
 
 // CodeSession кодирует сессию в строку c использованием JWT
-// Для этого этой функции надо передать  данные логина, идентификатор сессии, ключ для кодирования, время жизни токена
-func CodeSession(login string, sessionId int, jwtKey string, tokenLiveTime int) (string, error) {
+// Для этого этой функции надо передать  данные логина, идентификатор пользователя, ключ для кодирования, время жизни токена
+func CodeSession(login string, userID int, sessionId int, jwtKey string, tokenLiveTime int) (string, error) {
 	key := []byte(jwtKey)
-	c := createClaims(login, sessionId, tokenLiveTime)
+	c := createClaims(login, userID, sessionId, tokenLiveTime)
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, c)
 	tokenString, err := token.SignedString(key)
 	if err != nil {
@@ -44,12 +44,13 @@ func DecodeSession(tokenStr, jwtKey string) (*Claims, error) {
 }
 
 // CreateClaims создает claims для jwt на основании логина, ид сессии и времени жизни
-func createClaims(login string, sessionID, tokenLiveTime int) *Claims {
+func createClaims(login string, userID, sessionID, tokenLiveTime int) *Claims {
 	// Срок истечения валидности токена
 	expirationTime := time.Now().Add(time.Duration(tokenLiveTime) * time.Minute)
 
 	return &Claims{
 		SessionID: sessionID,
+		UserID:    userID,
 		Login:     login,
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: expirationTime.Unix(), // в JWT время жизни в Unix миллисекундах
@@ -60,7 +61,8 @@ func createClaims(login string, sessionID, tokenLiveTime int) *Claims {
 // Claims - это данные сессии, которые использует клиент для подписи своих запросов
 type Claims struct {
 	jwt.StandardClaims        //88 байт
-	Login              string `json:"login"`     //16 байт — 8 байт для указателя и 8 байт для длины. Логин
-	Client             string `json:"clientid"`  //16 байт — 8 байт для указателя и 8 байт для длины. Клиент
+	Login              string `json:"login"`     //16 байт — 8 байт для указателя и 8 байт для длины. Пользователь Логин
+	Client             string `json:"client"`    //16 байт — 8 байт для указателя и 8 байт для длины. Данные о клиенте
+	UserID             int    `json:"userid"`    //8 байт. Пользователь ИД
 	SessionID          int    `json:"sessionid"` //8 байт. Идентификатор сессии
 }

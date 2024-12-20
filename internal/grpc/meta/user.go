@@ -3,16 +3,17 @@ package meta
 import (
 	"context"
 
+	"github.com/rodeorm/keeper/internal/core"
 	"github.com/rodeorm/keeper/internal/crypt"
 	"google.golang.org/grpc/metadata"
 )
 
-// GetLoginFromCtx получает идентфикатор пользователя из мета в контексте
-func GetLoginFromCtx(ctx *context.Context, jwtKey string) (string, error) {
+// GetUserIdentity получает идентфикатор пользователя из мета в контексте
+func GetUserIdentity(ctx context.Context, jwtKey string) (*core.User, error) {
 
 	var token string
 
-	md, ok := metadata.FromIncomingContext(*ctx)
+	md, ok := metadata.FromIncomingContext(ctx)
 	if ok {
 		values := md.Get("token")
 		if len(values) > 0 {
@@ -23,15 +24,15 @@ func GetLoginFromCtx(ctx *context.Context, jwtKey string) (string, error) {
 
 	claims, err := crypt.DecodeSession(token, jwtKey)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 
-	return claims.Login, nil
+	return &core.User{ID: claims.UserID, Login: claims.Login}, nil
 }
 
 // PutUserKeyToMD помещает идентификатор пользователя в мету
-func PutLoginToMD(login, jwtKey string, sessionID, tokenLiveTime int) (metadata.MD, error) {
-	val, err := crypt.CodeSession(login, sessionID, jwtKey, tokenLiveTime)
+func PutLoginToMD(login, jwtKey string, userID, sessionID, tokenLiveTime int) (metadata.MD, error) {
+	val, err := crypt.CodeSession(login, userID, sessionID, jwtKey, tokenLiveTime)
 	if err != nil {
 		return nil, err
 	}

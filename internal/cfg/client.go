@@ -11,7 +11,7 @@ import (
 // GetClientConfigFromFile возвращает конфигурацию из конфигурационного файла клиента
 func GetClientConfigFromFile() (*ClientConfig, error) {
 	name := "config.yml"
-	fmt.Println(os.Getwd())
+	//fmt.Println(os.Getwd())
 	file, err := os.Open(name)
 
 	if err != nil {

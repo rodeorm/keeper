@@ -2,7 +2,6 @@ package cli
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/charmbracelet/bubbles/textinput"
 	tea "github.com/charmbracelet/bubbletea"
@@ -13,12 +12,12 @@ type SomeMsg struct {
 	Text string
 }
 
+type CheckOTPMsg struct {
+	Valid bool
+}
+
 func CmdWithArg(tm []textinput.Model) tea.Cmd {
 	return func() tea.Msg {
-		fmt.Println("Длина textInput.Model", len(tm))
-		for i, v := range tm {
-			fmt.Println(i, v.Value())
-		}
 		return SomeMsg{}
 	}
 }
@@ -30,4 +29,11 @@ func (m *Model) RegUser() tea.Msg {
 		return SomeMsg{Text: err.Error()}
 	}
 	return SomeMsg{}
+}
+
+func (m *Model) VerifiyOTP() tea.Msg {
+	ctx := context.TODO()
+	vrd := CheckOTPMsg{}
+	vrd.Valid, m.Token = client.Verify(&m.User, ctx, m.sc)
+	return vrd
 }

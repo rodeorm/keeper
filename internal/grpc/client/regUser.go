@@ -10,6 +10,7 @@ import (
 	"google.golang.org/grpc/metadata"
 )
 
+// RegUser регистрирует пользователя
 func RegUser(u *core.User, ctx context.Context, c proto.KeeperServiceClient) error {
 	var header, trailer metadata.MD
 	ctx, cancel := context.WithTimeout(ctx, 10*time.Second)
@@ -24,7 +25,8 @@ func RegUser(u *core.User, ctx context.Context, c proto.KeeperServiceClient) err
 		},
 	}
 
-	_, err := c.Reg(ctx, &req, grpc.Header(&header), grpc.Trailer(&trailer))
+	resp, err := c.Reg(ctx, &req, grpc.Header(&header), grpc.Trailer(&trailer))
+	u.ID = int(resp.Id)
 	//log.Println("получен ответ от grpc сервера для метода Reg", resp, err)
 	return err
 }

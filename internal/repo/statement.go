@@ -14,7 +14,7 @@ func (s *postgresStorage) prepareStatements() error {
 	if err != nil {
 		return err
 	}
-	stmtVerifyUser, err := s.DB.Preparex(`SELECT e.id FROM cmn.emails AS e WHERE e.UserID = $1 AND e.sendeddate + ($2 * INTERVAL '1 hour') > NOW() 
+	stmtVerifyUser, err := s.DB.Preparex(`SELECT e.id FROM cmn.emails AS e INNER JOIN cmn.Users AS u ON u.id = e.UserID WHERE u.Login = $1 AND e.sendeddate + ($2 * INTERVAL '1 hour') > NOW() 
 	AND e.Used = false AND e.OTP = $3; `)
 	if err != nil {
 		return err

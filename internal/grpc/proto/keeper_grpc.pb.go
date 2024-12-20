@@ -20,6 +20,7 @@ const _ = grpc.SupportPackageIsVersion9
 
 const (
 	KeeperService_Reg_FullMethodName             = "/keeper.KeeperService/Reg"
+	KeeperService_Verify_FullMethodName          = "/keeper.KeeperService/Verify"
 	KeeperService_Auth_FullMethodName            = "/keeper.KeeperService/Auth"
 	KeeperService_Quit_FullMethodName            = "/keeper.KeeperService/Quit"
 	KeeperService_CreateCouple_FullMethodName    = "/keeper.KeeperService/CreateCouple"
@@ -45,6 +46,7 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type KeeperServiceClient interface {
 	Reg(ctx context.Context, in *RegRequest, opts ...grpc.CallOption) (*RegResponse, error)
+	Verify(ctx context.Context, in *VerifyRequest, opts ...grpc.CallOption) (*VerifyResponse, error)
 	Auth(ctx context.Context, in *AuthRequest, opts ...grpc.CallOption) (*AuthResponse, error)
 	Quit(ctx context.Context, in *QuitRequest, opts ...grpc.CallOption) (*QuitResponse, error)
 	CreateCouple(ctx context.Context, in *CreateCoupleRequest, opts ...grpc.CallOption) (*CreateCoupleResponse, error)
@@ -77,6 +79,16 @@ func (c *keeperServiceClient) Reg(ctx context.Context, in *RegRequest, opts ...g
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(RegResponse)
 	err := c.cc.Invoke(ctx, KeeperService_Reg_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *keeperServiceClient) Verify(ctx context.Context, in *VerifyRequest, opts ...grpc.CallOption) (*VerifyResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(VerifyResponse)
+	err := c.cc.Invoke(ctx, KeeperService_Verify_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -268,6 +280,7 @@ func (c *keeperServiceClient) DeleteText(ctx context.Context, in *DeleteTextRequ
 // for forward compatibility.
 type KeeperServiceServer interface {
 	Reg(context.Context, *RegRequest) (*RegResponse, error)
+	Verify(context.Context, *VerifyRequest) (*VerifyResponse, error)
 	Auth(context.Context, *AuthRequest) (*AuthResponse, error)
 	Quit(context.Context, *QuitRequest) (*QuitResponse, error)
 	CreateCouple(context.Context, *CreateCoupleRequest) (*CreateCoupleResponse, error)
@@ -298,6 +311,9 @@ type UnimplementedKeeperServiceServer struct{}
 
 func (UnimplementedKeeperServiceServer) Reg(context.Context, *RegRequest) (*RegResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Reg not implemented")
+}
+func (UnimplementedKeeperServiceServer) Verify(context.Context, *VerifyRequest) (*VerifyResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Verify not implemented")
 }
 func (UnimplementedKeeperServiceServer) Auth(context.Context, *AuthRequest) (*AuthResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Auth not implemented")
@@ -388,6 +404,24 @@ func _KeeperService_Reg_Handler(srv interface{}, ctx context.Context, dec func(i
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(KeeperServiceServer).Reg(ctx, req.(*RegRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _KeeperService_Verify_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(VerifyRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(KeeperServiceServer).Verify(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: KeeperService_Verify_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(KeeperServiceServer).Verify(ctx, req.(*VerifyRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -726,6 +760,10 @@ var KeeperService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Reg",
 			Handler:    _KeeperService_Reg_Handler,
+		},
+		{
+			MethodName: "Verify",
+			Handler:    _KeeperService_Verify_Handler,
 		},
 		{
 			MethodName: "Auth",

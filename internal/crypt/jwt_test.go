@@ -10,10 +10,11 @@ import (
 func TestCodeSession(t *testing.T) {
 	login := "testUser"
 	sessionID := 12345
+	userID := 12
 	jwtKey := "superSecretKey" // Преобразуем ключ в []byte
 	tokenLiveTime := 30        // минут
 
-	token, err := CodeSession(login, sessionID, jwtKey, tokenLiveTime)
+	token, err := CodeSession(login, userID, sessionID, jwtKey, tokenLiveTime)
 	require.NoError(t, err, "Ошибка при кодировании сессии")
 	require.NotEmpty(t, token, "Токен не должен быть пустым")
 }
@@ -22,11 +23,12 @@ func TestCodeSession(t *testing.T) {
 func TestDecodeSession(t *testing.T) {
 	login := "testUser"
 	sessionID := 12345
+	userID := 12
 	jwtKey := "superSecretKey" // Преобразуем ключ в []byte
 	tokenLiveTime := 30        // минут
 
 	// Кодируем сессию для теста
-	token, err := CodeSession(login, sessionID, jwtKey, tokenLiveTime)
+	token, err := CodeSession(login, userID, sessionID, jwtKey, tokenLiveTime)
 	require.NoError(t, err, "Ошибка при кодировании сессии")
 
 	// Декодируем сессию

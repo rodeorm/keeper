@@ -26,6 +26,5 @@ type ServerConfig struct {
 
 //ClientConfig - конфигурация клиента
 type ClientConfig struct {
-	RunAddress    string `yaml:"RUN_ADDRESS"`    //Адрес для запуска клиента
 	ServerAddress string `yaml:"SERVER_ADDRESS"` //Адрес сервера, с которым должно быть установлено соединение
 }

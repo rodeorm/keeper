@@ -10,10 +10,17 @@ import (
 type Model struct {
 	User             core.User // Данные текущего пользователя
 	CurrentScreen    string    // Текущий экран для отображения
+	Token            string    // Токен
 	OTPMessageSended bool      // Было послано сообщение с OTP
+	Authenticated    bool      // Авторизован пользователь или нет
+	Verified         bool      // Подтвержден OTP или нет
+	Quitting         bool
+
 	LogoScreen
 	RegScreen
 	AuthScreen
+	WaitScreen
+	MainScreen
 
 	sc proto.KeeperServiceClient
 }
@@ -25,6 +32,8 @@ func InitialModel(sc proto.KeeperServiceClient) Model {
 	m.LogoScreen = initLogoScreen()
 	m.AuthScreen = initAuthScreen()
 	m.RegScreen = initRegScreen()
+	m.WaitScreen = initWaitScreen()
+	m.MainScreen = initMainScreen()
 	m.sc = sc
 
 	return m

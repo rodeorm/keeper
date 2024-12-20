@@ -14,6 +14,8 @@ func ReturnOTP(n int) (string, error) {
 		return "", fmt.Errorf("некорректное значение ключа %v", n)
 	}
 
+	n = 3 //!!! лень вводить больше при тестах
+
 	b := make([]rune, n)
 	for i := range b {
 		// Генерируем случайное число

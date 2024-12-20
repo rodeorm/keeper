@@ -6,6 +6,7 @@ option go_package = "keeper/internal/grpc/proto";
 
 service KeeperService {
     rpc Reg(RegRequest) returns (RegResponse);
+    rpc Verify(VerifyRequest) returns (VerifyResponse);
     rpc Auth(AuthRequest) returns (AuthResponse);
     rpc Quit(QuitRequest) returns (QuitResponse);
     rpc CreateCouple(CreateCoupleRequest) returns (CreateCoupleResponse);
@@ -25,6 +26,16 @@ service KeeperService {
     rpc DeleteBinary(DeleteBinaryRequest) returns (DeleteBinaryResponse);
     rpc DeleteText(DeleteTextRequest) returns (DeleteTextResponse);
 }
+
+message VerifyRequest {
+    string login = 1;
+    string OTP = 2;
+}
+
+message VerifyResponse {
+    bool verified = 1;
+}
+
 
 message DataType {
     enum Type {
@@ -87,7 +98,8 @@ message RegRequest {
 
 //RegResponse ответ на регистрацию пользователя
 message RegResponse {
-    string message = 1; 
+    string message = 1;
+    int64 id = 2; 
 }
 
 message AuthRequest {
@@ -101,39 +113,34 @@ message AuthResponse {
 
 
 message CreateCoupleRequest {
-    string login = 1;
-    Couple couple = 2;
+    Couple couple = 1;
 }
 
 message CreateCoupleResponse{
 }
 
 message CreateCardRequest{
-    string login = 1;
-    Card card = 2;
+    Card card = 1;
 }
 
 message CreateCardResponse{
 }
 
 message CreateBinaryRequest{
-    string login = 1;
-    Binary binary = 2;
+    Binary binary = 1;
 }
 
 message CreateBinaryResponse{
 }
 
 message CreateTextRequest{
-    string login = 1;
-    Text text = 2;
+    Text text = 1;
 }
 
 message CreateTextResponse{
 }
 
 message ReadAllCouplesRequest{
-    string login = 1;
 }
 
 message ReadAllCouplesResponse{
@@ -141,7 +148,6 @@ message ReadAllCouplesResponse{
 }
 
 message ReadAllCardsRequest{
-    string login = 1;
 }
 
 message ReadAllCardsResponse{
@@ -149,7 +155,6 @@ message ReadAllCardsResponse{
 }
 
 message ReadAllBinariesRequest{
-    string login = 1;
 }
 
 message ReadAllBinariesResponse{
@@ -165,8 +170,7 @@ message ReadAllTextsResponse{
 }
 
 message ReadCoupleRequest{
-    string login = 1;
-    Couple couple = 2;
+    Couple couple = 1;
 }
 
 message ReadCoupleResponse{
@@ -174,8 +178,7 @@ message ReadCoupleResponse{
 }
 
 message ReadCardRequest{
-    string login = 1;
-    Card card = 2;
+    Card card = 1;
 }
 
 message ReadCardResponse{
