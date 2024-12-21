@@ -63,5 +63,6 @@ func logoView(m *Model) string {
 		checkbox("Зарегистрироваться", c == 0), // Проставляем галочку на выбранном значении
 		checkbox("Авторизоваться", c == 1),     // Проставляем галочку на выбранном значении
 	)
-	return fmt.Sprintf(tpl, choices)
+
+	return m.header() + fmt.Sprintf(tpl, choices) + footer()
 }

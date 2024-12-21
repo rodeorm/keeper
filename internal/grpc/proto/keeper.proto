@@ -5,6 +5,7 @@ package keeper;
 option go_package = "keeper/internal/grpc/proto";
 
 service KeeperService {
+    rpc Ping(PingRequest) returns (PingResponse);
     rpc Reg(RegRequest) returns (RegResponse);
     rpc Verify(VerifyRequest) returns (VerifyResponse);
     rpc Auth(AuthRequest) returns (AuthResponse);
@@ -26,6 +27,10 @@ service KeeperService {
     rpc DeleteBinary(DeleteBinaryRequest) returns (DeleteBinaryResponse);
     rpc DeleteText(DeleteTextRequest) returns (DeleteTextResponse);
 }
+
+message PingRequest{}
+
+message PingResponse{}
 
 message VerifyRequest {
     string login = 1;

@@ -19,8 +19,10 @@ type Model struct {
 	LogoScreen
 	RegScreen
 	AuthScreen
-	WaitScreen
+	VerifyScreen
 	MainScreen
+	CardCreateScreen
+	CardSelectScreen
 
 	sc proto.KeeperServiceClient
 }
@@ -29,10 +31,16 @@ type Model struct {
 func InitialModel(sc proto.KeeperServiceClient) Model {
 	var m Model
 	m.CurrentScreen = "logo"
+	m.User = core.User{}
+	m.Token = ""
+	m.OTPMessageSended = false
+	m.Authenticated = false
+	m.Verified = false
+	m.Quitting = false
 	m.LogoScreen = initLogoScreen()
 	m.AuthScreen = initAuthScreen()
 	m.RegScreen = initRegScreen()
-	m.WaitScreen = initWaitScreen()
+	m.VerifyScreen = initVerifyScreen()
 	m.MainScreen = initMainScreen()
 	m.sc = sc
 

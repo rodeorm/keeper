@@ -19,6 +19,7 @@ func (s *postgresStorage) prepareStatements() error {
 	if err != nil {
 		return err
 	}
+
 	stmtAddByte, err := s.DB.Preparex(`INSERT INTO dbo.Data (userid, typeid, bytedata, createddate) SELECT $1, $2, $3, $4 RETURNING id;`)
 	if err != nil {
 		return err

@@ -19,6 +19,7 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
+	KeeperService_Ping_FullMethodName            = "/keeper.KeeperService/Ping"
 	KeeperService_Reg_FullMethodName             = "/keeper.KeeperService/Reg"
 	KeeperService_Verify_FullMethodName          = "/keeper.KeeperService/Verify"
 	KeeperService_Auth_FullMethodName            = "/keeper.KeeperService/Auth"
@@ -45,6 +46,7 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type KeeperServiceClient interface {
+	Ping(ctx context.Context, in *PingRequest, opts ...grpc.CallOption) (*PingResponse, error)
 	Reg(ctx context.Context, in *RegRequest, opts ...grpc.CallOption) (*RegResponse, error)
 	Verify(ctx context.Context, in *VerifyRequest, opts ...grpc.CallOption) (*VerifyResponse, error)
 	Auth(ctx context.Context, in *AuthRequest, opts ...grpc.CallOption) (*AuthResponse, error)
@@ -73,6 +75,16 @@ type keeperServiceClient struct {
 
 func NewKeeperServiceClient(cc grpc.ClientConnInterface) KeeperServiceClient {
 	return &keeperServiceClient{cc}
+}
+
+func (c *keeperServiceClient) Ping(ctx context.Context, in *PingRequest, opts ...grpc.CallOption) (*PingResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(PingResponse)
+	err := c.cc.Invoke(ctx, KeeperService_Ping_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *keeperServiceClient) Reg(ctx context.Context, in *RegRequest, opts ...grpc.CallOption) (*RegResponse, error) {
@@ -279,6 +291,7 @@ func (c *keeperServiceClient) DeleteText(ctx context.Context, in *DeleteTextRequ
 // All implementations must embed UnimplementedKeeperServiceServer
 // for forward compatibility.
 type KeeperServiceServer interface {
+	Ping(context.Context, *PingRequest) (*PingResponse, error)
 	Reg(context.Context, *RegRequest) (*RegResponse, error)
 	Verify(context.Context, *VerifyRequest) (*VerifyResponse, error)
 	Auth(context.Context, *AuthRequest) (*AuthResponse, error)
@@ -309,6 +322,9 @@ type KeeperServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedKeeperServiceServer struct{}
 
+func (UnimplementedKeeperServiceServer) Ping(context.Context, *PingRequest) (*PingResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Ping not implemented")
+}
 func (UnimplementedKeeperServiceServer) Reg(context.Context, *RegRequest) (*RegResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Reg not implemented")
 }
@@ -388,6 +404,24 @@ func RegisterKeeperServiceServer(s grpc.ServiceRegistrar, srv KeeperServiceServe
 		t.testEmbeddedByValue()
 	}
 	s.RegisterService(&KeeperService_ServiceDesc, srv)
+}
+
+func _KeeperService_Ping_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PingRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(KeeperServiceServer).Ping(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: KeeperService_Ping_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(KeeperServiceServer).Ping(ctx, req.(*PingRequest))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _KeeperService_Reg_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -757,6 +791,10 @@ var KeeperService_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "keeper.KeeperService",
 	HandlerType: (*KeeperServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "Ping",
+			Handler:    _KeeperService_Ping_Handler,
+		},
 		{
 			MethodName: "Reg",
 			Handler:    _KeeperService_Reg_Handler,

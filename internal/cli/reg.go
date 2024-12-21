@@ -15,13 +15,13 @@ type RegScreen struct {
 	FocusIndex int
 	Inputs     []textinput.Model
 	CursorMode cursor.Mode
+
+	err string
 }
 
 func (m *Model) updateRegInputs(msg tea.Msg) tea.Cmd {
 	cmds := make([]tea.Cmd, len(m.RegScreen.Inputs))
 
-	// Only text inputs with Focus() set will respond, so it's safe to simply
-	// update all of them here without any further logic.
 	for i := range m.RegScreen.Inputs {
 		m.RegScreen.Inputs[i], cmds[i] = m.RegScreen.Inputs[i].Update(msg)
 	}
@@ -29,9 +29,17 @@ func (m *Model) updateRegInputs(msg tea.Msg) tea.Cmd {
 	return tea.Batch(cmds...)
 }
 
-// Update loop for the second view after a choice has been made
 func updateRegScreen(msg tea.Msg, m *Model) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
+	case regMsg:
+		{
+			if msg.reg {
+				m.CurrentScreen = "verify"
+				m.OTPMessageSended = true
+			} else {
+				m.RegScreen.err = msg.err.Error()
+			}
+		}
 	case tea.KeyMsg:
 		switch msg.String() {
 		// Переместить фокус на следующее поле
@@ -41,17 +49,14 @@ func updateRegScreen(msg tea.Msg, m *Model) (tea.Model, tea.Cmd) {
 			// Пользователь нажал на enter, когда выбрана кнопка Submit?
 			// Если так, то отправляем сообщение на grpc и возвращаемся на лого форму.
 			if s == "enter" && m.RegScreen.FocusIndex == len(m.RegScreen.Inputs) {
-				//cmdNew := cmdWithArg(m.RegScreen.Inputs)
-				m.CurrentScreen = "logo"
-				m.OTPMessageSended = true
-				m.CurrentScreen = "wait"
+
 				m.User = core.User{Login: m.RegScreen.Inputs[0].Value(),
 					Password: m.RegScreen.Inputs[1].Value(),
 					Email:    m.RegScreen.Inputs[2].Value(),
 					Name:     m.RegScreen.Inputs[3].Value(),
 				}
 
-				return m, m.RegUser
+				return m, m.regUser
 			}
 
 			// Cycle indexes
@@ -85,7 +90,6 @@ func updateRegScreen(msg tea.Msg, m *Model) (tea.Model, tea.Cmd) {
 		}
 	}
 
-	// Handle character input and blinking
 	cmd := m.updateRegInputs(msg)
 	return *m, cmd
 }
@@ -127,15 +131,16 @@ func initRegScreen() RegScreen {
 	return m
 }
 
-// regView - второе представление: либо для регистрации, либо для авторизации
+// regView - форма для регистрации
 func regView(m *Model) string {
 	var msg string
 	var b strings.Builder
 
-	msg = fmt.Sprintf("Хотите зарегистрироваться?\n\nОтлично! Просто введите  %s, %s и %s.\n",
+	msg = fmt.Sprintf("Хотите зарегистрироваться?\n\nОтлично! Просто введите  %s, %s, %s и %s \n",
 		keywordStyle.Render("логин"),
 		keywordStyle.Render("пароль"),
-		keywordStyle.Render("адрес электронной почты"))
+		keywordStyle.Render("адрес электронной почты"),
+		keywordStyle.Render("имя"))
 
 	for i := range m.RegScreen.Inputs {
 		b.WriteString(m.RegScreen.Inputs[i].View())
@@ -149,12 +154,12 @@ func regView(m *Model) string {
 		button = &focusedButton
 	}
 	fmt.Fprintf(&b, "\n\n%s\n\n", *button)
-	/*
-		b.WriteString(helpStyle.Render("cursor mode is "))
-		b.WriteString(cursorModeHelpStyle.Render(m.RegScreen.CursorMode.String()))
-		b.WriteString(helpStyle.Render(" (ctrl+r to change style)"))
-	*/
+
 	msg += "\n" + b.String()
-	msg += "\n" + subtleStyle.Render("Для выхода нажмите esc или ctrl + c")
-	return msg
+
+	if m.RegScreen.err != "" {
+		return msg + err(m.RegScreen.err) + footer()
+	}
+
+	return m.header() + msg + footer()
 }

@@ -7,7 +7,9 @@ import (
 	"github.com/rodeorm/keeper/internal/core"
 	"github.com/rodeorm/keeper/internal/grpc/proto"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"
+	"google.golang.org/grpc/status"
 )
 
 // RegUser регистрирует пользователя
@@ -26,7 +28,11 @@ func RegUser(u *core.User, ctx context.Context, c proto.KeeperServiceClient) err
 	}
 
 	resp, err := c.Reg(ctx, &req, grpc.Header(&header), grpc.Trailer(&trailer))
+
+	if status.Code(err) != codes.OK {
+
+		return err
+	}
 	u.ID = int(resp.Id)
-	//log.Println("получен ответ от grpc сервера для метода Reg", resp, err)
-	return err
+	return nil
 }

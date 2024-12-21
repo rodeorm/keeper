@@ -7,6 +7,7 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/rodeorm/keeper/internal/cfg"
 	"github.com/rodeorm/keeper/internal/cli"
+	"github.com/rodeorm/keeper/internal/grpc/client"
 	"github.com/rodeorm/keeper/internal/grpc/proto"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
@@ -25,14 +26,21 @@ func main() {
 		//	panic(err)
 	}
 	// устанавливаем соединение с сервером
-	conn, err := grpc.NewClient(config.ServerAddress, grpc.WithTransportCredentials(insecure.NewCredentials()), grpc.WithDefaultCallOptions(grpc.UseCompressor(gzip.Name)))
+	conn, err := grpc.NewClient(config.ServerAddress, grpc.WithBlock(), grpc.WithTransportCredentials(insecure.NewCredentials()), grpc.WithDefaultCallOptions(grpc.UseCompressor(gzip.Name)))
 	if err != nil {
 		log.Println("Ошибка при попытке установить соединение с сервером")
 		os.Exit(1)
 	}
+	grpc := proto.NewKeeperServiceClient(conn)
+	err = client.Ping(grpc)
+	if err != nil {
+		log.Println("Ошибка при проверке соединения с сервером")
+		os.Exit(1)
+	}
+
 	defer conn.Close()
 
-	initModel := cli.InitialModel(proto.NewKeeperServiceClient(conn))
+	initModel := cli.InitialModel(grpc)
 	p := tea.NewProgram(initModel)
 	if _, err := p.Run(); err != nil {
 		log.Println("Ошибка при попытке запустить программу")

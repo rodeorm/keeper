@@ -7,33 +7,39 @@ import (
 	"github.com/charmbracelet/bubbles/cursor"
 	"github.com/charmbracelet/bubbles/textinput"
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/rodeorm/keeper/internal/core"
 )
 
-// AuthScreen данные для авторизации
+// AuthScreen данные для аутентификации
 type AuthScreen struct {
-	// Для ввода данных с группы textInput
 	FocusIndex int
 	Inputs     []textinput.Model
 	CursorMode cursor.Mode
+
+	err error // Ошибка при авторизации
+}
+
+func (m *Model) updateAuthInputs(msg tea.Msg) tea.Cmd {
+	cmds := make([]tea.Cmd, len(m.AuthScreen.Inputs))
+
+	for i := range m.AuthScreen.Inputs {
+		m.AuthScreen.Inputs[i], cmds[i] = m.AuthScreen.Inputs[i].Update(msg)
+	}
+
+	return tea.Batch(cmds...)
 }
 
 // Update loop for the second view after a choice has been made
 func updateAuthScreen(msg tea.Msg, m *Model) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
+	case authMsg:
+		if !msg.auth {
+			m.AuthScreen.err = fmt.Errorf("неправильный логин или пароль")
+		} else {
+			m.CurrentScreen = "verify"
+		}
 	case tea.KeyMsg:
 		switch msg.String() {
-		// Смена режима курсора
-		case "ctrl+r":
-			m.AuthScreen.CursorMode++
-			if m.AuthScreen.CursorMode > cursor.CursorHide {
-				m.AuthScreen.CursorMode = cursor.CursorBlink
-			}
-			cmds := make([]tea.Cmd, len(m.AuthScreen.Inputs))
-			for i := range m.AuthScreen.Inputs {
-				cmds[i] = m.AuthScreen.Inputs[i].Cursor.SetMode(m.AuthScreen.CursorMode)
-			}
-			return m, tea.Batch(cmds...)
-
 		// Переместить фокус на следующее поле
 		case "tab", "shift+tab", "enter", "up", "down":
 			s := msg.String()
@@ -41,13 +47,13 @@ func updateAuthScreen(msg tea.Msg, m *Model) (tea.Model, tea.Cmd) {
 			// Пользователь нажал на enter, когда выбрана кнопка Submit?
 			// Если так, то отправляем сообщение на grpc и возвращаемся на лого форму.
 			if s == "enter" && m.AuthScreen.FocusIndex == len(m.AuthScreen.Inputs) {
-				//cmdNew := cmdWithArg(m.AuthScreen.Inputs)
-				m.CurrentScreen = "logo"
-				m.OTPMessageSended = true
-				return m, nil //tea.Quit
+				m.User = core.User{Login: m.AuthScreen.Inputs[0].Value(),
+					Password: m.AuthScreen.Inputs[1].Value(),
+				}
+
+				return m, m.authUser
 			}
 
-			// Cycle indexes
 			if s == "up" || s == "shift+tab" {
 				m.AuthScreen.FocusIndex--
 			} else {
@@ -78,17 +84,15 @@ func updateAuthScreen(msg tea.Msg, m *Model) (tea.Model, tea.Cmd) {
 		}
 	}
 
-	// Handle character input and blinking
-	cmd := m.updateRegInputs(msg)
+	cmd := m.updateAuthInputs(msg)
 	return *m, cmd
 }
 
-// initAuthScreen инициализирует по умолчанию
+// initAuthScreen инцицилизирует форму для регистрации по умолчанию
 func initAuthScreen() AuthScreen {
 	m := AuthScreen{
 		Inputs: make([]textinput.Model, 2),
 	}
-
 	var t textinput.Model
 	for i := range m.Inputs {
 		t = textinput.New()
@@ -104,23 +108,24 @@ func initAuthScreen() AuthScreen {
 		case 1:
 			t.Placeholder = "Password"
 			t.EchoMode = textinput.EchoPassword
-			t.EchoCharacter = '•'
+			t.PromptStyle = focusedStyle
+			t.TextStyle = focusedStyle
 		}
 
 		m.Inputs[i] = t
 	}
-
 	return m
 }
 
-// authView - второе представление: либо для регистрации, либо для авторизации
+// authView - форма для авторизации
 func authView(m *Model) string {
 	var msg string
 	var b strings.Builder
 
-	msg = fmt.Sprintf("Уже зарегистрированы? \n\nОтлично! Просто введите %s и %s...\n\n", keywordStyle.Render("логин"), keywordStyle.Render("пароль"))
-
-	msg += subtleStyle.Render("Для выхода нажмите esc")
+	msg = fmt.Sprintf("Хотите зарегистрироваться?\n\nОтлично! Просто введите  %s, %s и %s.\n",
+		keywordStyle.Render("логин"),
+		keywordStyle.Render("пароль"),
+		keywordStyle.Render("адрес электронной почты"))
 
 	for i := range m.AuthScreen.Inputs {
 		b.WriteString(m.AuthScreen.Inputs[i].View())
@@ -130,16 +135,11 @@ func authView(m *Model) string {
 	}
 
 	button := &blurredButton
-	if m.RegScreen.FocusIndex == len(m.AuthScreen.Inputs) {
+	if m.AuthScreen.FocusIndex == len(m.AuthScreen.Inputs) {
 		button = &focusedButton
 	}
 	fmt.Fprintf(&b, "\n\n%s\n\n", *button)
-
-	b.WriteString(helpStyle.Render("cursor mode is "))
-	b.WriteString(cursorModeHelpStyle.Render(m.AuthScreen.CursorMode.String()))
-	b.WriteString(helpStyle.Render(" (ctrl+r to change style)"))
 	msg += "\n" + b.String()
-	msg += "\n" + subtleStyle.Render("Для выхода нажмите esc или ctrl + c")
-
+	msg += "\n" + subtleStyle.Render("Для выхода нажмите ") + keywordStyle.Render("ctrl+c")
 	return msg
 }

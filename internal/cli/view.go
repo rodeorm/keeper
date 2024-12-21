@@ -14,8 +14,8 @@ func (m Model) View() string {
 		s = regView(&m)
 	case "auth":
 		s = authView(&m)
-	case "wait":
-		s = waitView(&m)
+	case "verify":
+		s = verifyView(&m)
 	case "main":
 		s = mainView(&m)
 	}

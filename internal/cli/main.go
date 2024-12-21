@@ -58,8 +58,8 @@ func mainView(m *Model) string {
 	c := m.MainScreen.Choice //  Забираем значение из модели, что выбрано
 	var choices, tpl string
 
-	tpl = fmt.Sprintf("Добро пожловать, %s!\n\n Выберите раздел данных:\n",
-		keywordStyle.Render("логин"))
+	tpl = fmt.Sprintf("Добро пожловать, %s!\n\nВыберите раздел данных:\n",
+		keywordStyle.Render(m.User.Login))
 	tpl += "%s\n\n"
 	tpl += subtleStyle.Render("j/k, up/down: select") + dotStyle +
 		subtleStyle.Render("enter: choose") + dotStyle +
@@ -71,5 +71,5 @@ func mainView(m *Model) string {
 		checkbox("Текст", c == 2),
 		checkbox("Бинарники", c == 3))
 
-	return fmt.Sprintf(tpl, choices)
+	return m.header() + fmt.Sprintf(tpl, choices) + footer()
 }
