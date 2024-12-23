@@ -21,7 +21,7 @@ func (g *grpcServer) CreateCard(ctx context.Context, cr *proto.CreateCardRequest
 		OwnerName: cr.Card.OwnerName,
 		ExpMonth:  int(cr.Card.ExpMonth),
 		ExpYear:   int(cr.Card.ExpYear),
-		Meta:      cr.Card.Meta.Value}
+		Meta:      cr.Card.Meta}
 
 	err = g.cfg.CardStorager.AddCardByUser(ctx, card, usr)
 	if err != nil {

@@ -9,8 +9,8 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 )
 
-// VerifyScreen данные для ввода одноразового пароля
-type VerifyScreen struct {
+// Verify данные для ввода одноразового пароля
+type Verify struct {
 	FocusIndex int
 	Inputs     []textinput.Model
 	CursorMode cursor.Mode
@@ -19,17 +19,17 @@ type VerifyScreen struct {
 }
 
 func (m *Model) updateVerifyInputs(msg tea.Msg) tea.Cmd {
-	cmds := make([]tea.Cmd, len(m.VerifyScreen.Inputs))
+	cmds := make([]tea.Cmd, len(m.Verify.Inputs))
 
-	for i := range m.VerifyScreen.Inputs {
-		m.VerifyScreen.Inputs[i], cmds[i] = m.VerifyScreen.Inputs[i].Update(msg)
+	for i := range m.Verify.Inputs {
+		m.Verify.Inputs[i], cmds[i] = m.Verify.Inputs[i].Update(msg)
 	}
 
 	return tea.Batch(cmds...)
 }
 
-// updateVerifyScreen обновляет поля ввода экрана Verify
-func updateVerifyScreen(msg tea.Msg, m *Model) (tea.Model, tea.Cmd) {
+// updateVerify обновляет поля ввода экрана Verify
+func updateVerify(msg tea.Msg, m *Model) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case verifyMsg:
 		{
@@ -37,7 +37,7 @@ func updateVerifyScreen(msg tea.Msg, m *Model) (tea.Model, tea.Cmd) {
 				m.Authenticated = true
 				m.CurrentScreen = "main"
 			} else {
-				m.VerifyScreen.err = "некорректный одноразовый пароль"
+				m.Verify.err = "некорректный одноразовый пароль"
 			}
 		}
 	case tea.KeyMsg:
@@ -48,39 +48,39 @@ func updateVerifyScreen(msg tea.Msg, m *Model) (tea.Model, tea.Cmd) {
 
 			// Пользователь нажал на enter, когда выбрана кнопка Submit?
 			// Если так, то отправляем сообщение на grpc и возвращаемся на лого форму.
-			if s == "enter" && m.VerifyScreen.FocusIndex == len(m.VerifyScreen.Inputs) {
-				//cmdNew := cmdWithArg(m.VerifyScreen.Inputs)
+			if s == "enter" && m.Verify.FocusIndex == len(m.Verify.Inputs) {
+				//cmdNew := cmdWithArg(m.Verify.Inputs)
 
-				m.User.OTP = m.VerifyScreen.Inputs[0].Value()
+				m.User.OTP = m.Verify.Inputs[0].Value()
 
 				return m, m.verifyOTP
 			}
 
 			if s == "up" || s == "shift+tab" {
-				m.VerifyScreen.FocusIndex--
+				m.Verify.FocusIndex--
 			} else {
-				m.VerifyScreen.FocusIndex++
+				m.Verify.FocusIndex++
 			}
 
-			if m.VerifyScreen.FocusIndex > len(m.VerifyScreen.Inputs) {
-				m.VerifyScreen.FocusIndex = 0
-			} else if m.VerifyScreen.FocusIndex < 0 {
-				m.VerifyScreen.FocusIndex = len(m.VerifyScreen.Inputs)
+			if m.Verify.FocusIndex > len(m.Verify.Inputs) {
+				m.Verify.FocusIndex = 0
+			} else if m.Verify.FocusIndex < 0 {
+				m.Verify.FocusIndex = len(m.Verify.Inputs)
 			}
 
-			cmds := make([]tea.Cmd, len(m.VerifyScreen.Inputs))
-			for i := 0; i <= len(m.VerifyScreen.Inputs)-1; i++ {
-				if i == m.VerifyScreen.FocusIndex {
+			cmds := make([]tea.Cmd, len(m.Verify.Inputs))
+			for i := 0; i <= len(m.Verify.Inputs)-1; i++ {
+				if i == m.Verify.FocusIndex {
 					// Устанавливаем фокус
-					cmds[i] = m.VerifyScreen.Inputs[i].Focus()
-					m.VerifyScreen.Inputs[i].PromptStyle = focusedStyle
-					m.VerifyScreen.Inputs[i].TextStyle = focusedStyle
+					cmds[i] = m.Verify.Inputs[i].Focus()
+					m.Verify.Inputs[i].PromptStyle = focusedStyle
+					m.Verify.Inputs[i].TextStyle = focusedStyle
 					continue
 				}
 				// Убираем фокус
-				m.VerifyScreen.Inputs[i].Blur()
-				m.VerifyScreen.Inputs[i].PromptStyle = noStyle
-				m.VerifyScreen.Inputs[i].TextStyle = noStyle
+				m.Verify.Inputs[i].Blur()
+				m.Verify.Inputs[i].PromptStyle = noStyle
+				m.Verify.Inputs[i].TextStyle = noStyle
 			}
 			return m, tea.Batch(cmds...)
 		}
@@ -90,9 +90,9 @@ func updateVerifyScreen(msg tea.Msg, m *Model) (tea.Model, tea.Cmd) {
 	return *m, cmd
 }
 
-// initVerifyScreen инцицилизирует форму для регистрации по умолчанию
-func initVerifyScreen() VerifyScreen {
-	m := VerifyScreen{
+// initVerify инцицилизирует форму для регистрации по умолчанию
+func initVerify() Verify {
+	m := Verify{
 		Inputs: make([]textinput.Model, 1),
 	}
 	var t textinput.Model
@@ -112,8 +112,7 @@ func initVerifyScreen() VerifyScreen {
 	return m
 }
 
-// verifyView - второе представление: либо для регистрации, либо для авторизации
-func verifyView(m *Model) string {
+func viewVerify(m *Model) string {
 	var msg string
 	var b strings.Builder
 
@@ -123,15 +122,15 @@ func verifyView(m *Model) string {
 
 	msg += "Введите его:"
 
-	for i := range m.VerifyScreen.Inputs {
-		b.WriteString(m.VerifyScreen.Inputs[i].View())
-		if i < len(m.VerifyScreen.Inputs)-1 {
+	for i := range m.Verify.Inputs {
+		b.WriteString(m.Verify.Inputs[i].View())
+		if i < len(m.Verify.Inputs)-1 {
 			b.WriteRune('\n')
 		}
 	}
 
 	button := &blurredButton
-	if m.VerifyScreen.FocusIndex == len(m.VerifyScreen.Inputs) {
+	if m.Verify.FocusIndex == len(m.Verify.Inputs) {
 		button = &focusedButton
 	}
 	fmt.Fprintf(&b, "\n\n%s\n\n", *button)

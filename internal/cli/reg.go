@@ -10,8 +10,8 @@ import (
 	"github.com/rodeorm/keeper/internal/core"
 )
 
-// RegScreen данные регистрации
-type RegScreen struct {
+// Reg данные регистрации
+type Reg struct {
 	FocusIndex int
 	Inputs     []textinput.Model
 	CursorMode cursor.Mode
@@ -20,16 +20,16 @@ type RegScreen struct {
 }
 
 func (m *Model) updateRegInputs(msg tea.Msg) tea.Cmd {
-	cmds := make([]tea.Cmd, len(m.RegScreen.Inputs))
+	cmds := make([]tea.Cmd, len(m.Reg.Inputs))
 
-	for i := range m.RegScreen.Inputs {
-		m.RegScreen.Inputs[i], cmds[i] = m.RegScreen.Inputs[i].Update(msg)
+	for i := range m.Reg.Inputs {
+		m.Reg.Inputs[i], cmds[i] = m.Reg.Inputs[i].Update(msg)
 	}
 
 	return tea.Batch(cmds...)
 }
 
-func updateRegScreen(msg tea.Msg, m *Model) (tea.Model, tea.Cmd) {
+func updateReg(msg tea.Msg, m *Model) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case regMsg:
 		{
@@ -37,7 +37,7 @@ func updateRegScreen(msg tea.Msg, m *Model) (tea.Model, tea.Cmd) {
 				m.CurrentScreen = "verify"
 				m.OTPMessageSended = true
 			} else {
-				m.RegScreen.err = msg.err.Error()
+				m.Reg.err = msg.err.Error()
 			}
 		}
 	case tea.KeyMsg:
@@ -48,12 +48,12 @@ func updateRegScreen(msg tea.Msg, m *Model) (tea.Model, tea.Cmd) {
 
 			// Пользователь нажал на enter, когда выбрана кнопка Submit?
 			// Если так, то отправляем сообщение на grpc и возвращаемся на лого форму.
-			if s == "enter" && m.RegScreen.FocusIndex == len(m.RegScreen.Inputs) {
+			if s == "enter" && m.Reg.FocusIndex == len(m.Reg.Inputs) {
 
-				m.User = core.User{Login: m.RegScreen.Inputs[0].Value(),
-					Password: m.RegScreen.Inputs[1].Value(),
-					Email:    m.RegScreen.Inputs[2].Value(),
-					Name:     m.RegScreen.Inputs[3].Value(),
+				m.User = core.User{Login: m.Reg.Inputs[0].Value(),
+					Password: m.Reg.Inputs[1].Value(),
+					Email:    m.Reg.Inputs[2].Value(),
+					Name:     m.Reg.Inputs[3].Value(),
 				}
 
 				return m, m.regUser
@@ -61,30 +61,30 @@ func updateRegScreen(msg tea.Msg, m *Model) (tea.Model, tea.Cmd) {
 
 			// Cycle indexes
 			if s == "up" || s == "shift+tab" {
-				m.RegScreen.FocusIndex--
+				m.Reg.FocusIndex--
 			} else {
-				m.RegScreen.FocusIndex++
+				m.Reg.FocusIndex++
 			}
 
-			if m.RegScreen.FocusIndex > len(m.RegScreen.Inputs) {
-				m.RegScreen.FocusIndex = 0
-			} else if m.RegScreen.FocusIndex < 0 {
-				m.RegScreen.FocusIndex = len(m.RegScreen.Inputs)
+			if m.Reg.FocusIndex > len(m.Reg.Inputs) {
+				m.Reg.FocusIndex = 0
+			} else if m.Reg.FocusIndex < 0 {
+				m.Reg.FocusIndex = len(m.Reg.Inputs)
 			}
 
-			cmds := make([]tea.Cmd, len(m.RegScreen.Inputs))
-			for i := 0; i <= len(m.RegScreen.Inputs)-1; i++ {
-				if i == m.RegScreen.FocusIndex {
+			cmds := make([]tea.Cmd, len(m.Reg.Inputs))
+			for i := 0; i <= len(m.Reg.Inputs)-1; i++ {
+				if i == m.Reg.FocusIndex {
 					// Устанавливаем фокус
-					cmds[i] = m.RegScreen.Inputs[i].Focus()
-					m.RegScreen.Inputs[i].PromptStyle = focusedStyle
-					m.RegScreen.Inputs[i].TextStyle = focusedStyle
+					cmds[i] = m.Reg.Inputs[i].Focus()
+					m.Reg.Inputs[i].PromptStyle = focusedStyle
+					m.Reg.Inputs[i].TextStyle = focusedStyle
 					continue
 				}
 				// Убираем фокус
-				m.RegScreen.Inputs[i].Blur()
-				m.RegScreen.Inputs[i].PromptStyle = noStyle
-				m.RegScreen.Inputs[i].TextStyle = noStyle
+				m.Reg.Inputs[i].Blur()
+				m.Reg.Inputs[i].PromptStyle = noStyle
+				m.Reg.Inputs[i].TextStyle = noStyle
 			}
 			return m, tea.Batch(cmds...)
 		}
@@ -94,9 +94,9 @@ func updateRegScreen(msg tea.Msg, m *Model) (tea.Model, tea.Cmd) {
 	return *m, cmd
 }
 
-// initRegScreen инцицилизирует форму для регистрации по умолчанию
-func initRegScreen() RegScreen {
-	m := RegScreen{
+// initReg инцицилизирует форму для регистрации по умолчанию
+func initReg() Reg {
+	m := Reg{
 		Inputs: make([]textinput.Model, 4),
 	}
 	var t textinput.Model
@@ -131,8 +131,8 @@ func initRegScreen() RegScreen {
 	return m
 }
 
-// regView - форма для регистрации
-func regView(m *Model) string {
+// viewReg - форма для регистрации
+func viewReg(m *Model) string {
 	var msg string
 	var b strings.Builder
 
@@ -142,23 +142,23 @@ func regView(m *Model) string {
 		keywordStyle.Render("адрес электронной почты"),
 		keywordStyle.Render("имя"))
 
-	for i := range m.RegScreen.Inputs {
-		b.WriteString(m.RegScreen.Inputs[i].View())
-		if i < len(m.RegScreen.Inputs)-1 {
+	for i := range m.Reg.Inputs {
+		b.WriteString(m.Reg.Inputs[i].View())
+		if i < len(m.Reg.Inputs)-1 {
 			b.WriteRune('\n')
 		}
 	}
 
 	button := &blurredButton
-	if m.RegScreen.FocusIndex == len(m.RegScreen.Inputs) {
+	if m.Reg.FocusIndex == len(m.Reg.Inputs) {
 		button = &focusedButton
 	}
 	fmt.Fprintf(&b, "\n\n%s\n\n", *button)
 
 	msg += "\n" + b.String()
 
-	if m.RegScreen.err != "" {
-		return msg + err(m.RegScreen.err) + footer()
+	if m.Reg.err != "" {
+		return msg + err(m.Reg.err) + footer()
 	}
 
 	return m.header() + msg + footer()

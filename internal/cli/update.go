@@ -28,13 +28,17 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case "logo":
 		return updateLogo(msg, &m)
 	case "reg":
-		return updateRegScreen(msg, &m)
+		return updateReg(msg, &m)
 	case "auth":
-		return updateAuthScreen(msg, &m)
+		return updateAuth(msg, &m)
 	case "verify":
-		return updateVerifyScreen(msg, &m)
+		return updateVerify(msg, &m)
 	case "main":
 		return updateMain(msg, &m)
+	case "cardCreate":
+		return updateCardCreate(msg, &m)
+	case "cardList":
+		return updateCardList(msg, &m)
 	default:
 		return updateLogo(msg, &m)
 	}

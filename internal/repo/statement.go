@@ -10,7 +10,7 @@ func (s *postgresStorage) prepareStatements() error {
 	if err != nil {
 		return err
 	}
-	stmtAuthUser, err := s.DB.Preparex(`SELECT Login, Password FROM cmn.Users WHERE Login = $1;`)
+	stmtAuthUser, err := s.DB.Preparex(`SELECT Login, Password, ID, Email FROM cmn.Users WHERE Login = $1;`)
 	if err != nil {
 		return err
 	}

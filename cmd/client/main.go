@@ -41,7 +41,7 @@ func main() {
 	defer conn.Close()
 
 	initModel := cli.InitialModel(grpc)
-	p := tea.NewProgram(initModel)
+	p := tea.NewProgram(initModel) //, tea.WithAltScreen())
 	if _, err := p.Run(); err != nil {
 		log.Println("Ошибка при попытке запустить программу")
 		os.Exit(1)

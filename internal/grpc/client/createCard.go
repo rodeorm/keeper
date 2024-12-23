@@ -4,14 +4,14 @@ import (
 	"context"
 	"time"
 
-	"github.com/rodeorm/keeper/internal/core"
-	"github.com/rodeorm/keeper/internal/grpc/meta"
-	"github.com/rodeorm/keeper/internal/grpc/proto"
-
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
+
+	"github.com/rodeorm/keeper/internal/core"
+	"github.com/rodeorm/keeper/internal/grpc/meta"
+	"github.com/rodeorm/keeper/internal/grpc/proto"
 )
 
 func CreateCard(ctxBg context.Context, token string, crd core.Card, c proto.KeeperServiceClient) error {
@@ -25,7 +25,7 @@ func CreateCard(ctxBg context.Context, token string, crd core.Card, c proto.Keep
 			OwnerName: crd.OwnerName,
 			ExpMonth:  int32(crd.ExpMonth),
 			ExpYear:   int32(crd.ExpYear),
-			Meta:      &proto.Meta{Value: crd.Meta}}},
+			Meta:      crd.Meta}},
 		grpc.Header(&header),
 		grpc.Trailer(&trailer))
 	if status.Code(err) != codes.OK {

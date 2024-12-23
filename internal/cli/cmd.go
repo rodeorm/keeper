@@ -5,24 +5,9 @@ import (
 
 	"github.com/charmbracelet/bubbles/textinput"
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/rodeorm/keeper/internal/core"
 	"github.com/rodeorm/keeper/internal/grpc/client"
 )
-
-// authMsg - сообщение о результате аутентификации по логину и паролю
-type authMsg struct {
-	auth bool //Прошел аутентификаию по логину и паролю или нет
-}
-
-// verifyMsg - сообщение о результате аутентификаци по одноразовому паролю
-type verifyMsg struct {
-	valid bool
-}
-
-// regMsg - сообщение о рзеультате регистрации
-type regMsg struct {
-	reg bool  // Да - Был зарегистрирован; Нет - не был зарегистрирован
-	err error // Причина, по которой мог не зарегистрироваться
-}
 
 // regUser - команда на регистрацию пользователя
 func (m *Model) regUser() tea.Msg {
@@ -54,6 +39,45 @@ func (m *Model) verifyOTP() tea.Msg {
 	vrd := verifyMsg{}
 	vrd.valid, m.Token = client.Verify(&m.User, ctx, m.sc)
 	return vrd
+}
+
+func (m *Model) createCard() tea.Msg {
+	return nil
+}
+
+func (m *Model) listCard() tea.Msg {
+	cards := make([]core.Card, 0)
+
+	cards = append(cards, core.Card{CardNumber: "1231 2311 3112 2212", OwnerName: "Alexander 1", ExpMonth: 10, ExpYear: 22, Meta: "this is desc 1"})
+	cards = append(cards, core.Card{CardNumber: "1231 2312 3112 2212", OwnerName: "Alexander 2", ExpMonth: 10, ExpYear: 22, Meta: "this is desc 2"})
+	cards = append(cards, core.Card{CardNumber: "1231 2315 3112 2212", OwnerName: "Alexander 3", ExpMonth: 10, ExpYear: 22, Meta: "this is desc 3"})
+	cards = append(cards, core.Card{CardNumber: "1231 2312 3112 2212", OwnerName: "Alexander 4", ExpMonth: 10, ExpYear: 22, Meta: "this is desc 4"})
+
+	return cardListMsg{cards: cards}
+}
+
+func (m *Model) createBin() tea.Msg {
+	return nil
+}
+
+func (m *Model) listBin() tea.Msg {
+	return nil
+}
+
+func (m *Model) createCouple() tea.Msg {
+	return nil
+}
+
+func (m *Model) listCouple() tea.Msg {
+	return nil
+}
+
+func (m *Model) createText() tea.Msg {
+	return nil
+}
+
+func (m *Model) listText() tea.Msg {
+	return nil
 }
 
 // CmdWithArg - на случай необходимости передавать параметры в cmd

@@ -9,15 +9,19 @@ func (m Model) View() string {
 	}
 	switch m.CurrentScreen {
 	case "logo":
-		s = logoView(&m)
+		s = viewLogo(&m)
 	case "reg":
-		s = regView(&m)
+		s = viewReg(&m)
 	case "auth":
-		s = authView(&m)
+		s = viewAuth(&m)
 	case "verify":
-		s = verifyView(&m)
+		s = viewVerify(&m)
 	case "main":
-		s = mainView(&m)
+		s = viewMain(&m)
+	case "cardCreate":
+		s = viewCardCreate(&m)
+	case "cardList":
+		s = viewCardList(&m)
 	}
 	return mainStyle.Render("\n" + s + "\n\n")
 }

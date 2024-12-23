@@ -30,7 +30,7 @@ func (g *grpcServer) ReadAllCards(ctx context.Context, cr *proto.ReadAllCardsReq
 			ExpMonth:  int32(v.ExpMonth),
 			ExpYear:   int32(v.ExpYear),
 			CVC:       int32(v.CVC),
-			Meta:      &proto.Meta{Value: v.Meta},
+			Meta:      v.Meta,
 			Id:        int32(v.ID),
 		}
 		resp.Cards = append(resp.Cards, &c)

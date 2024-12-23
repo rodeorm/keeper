@@ -51,15 +51,11 @@ message DataType {
       }
 }
 
-message Meta {
-    string value = 1;
-}
-
 message Couple {
     string source = 1;
     string login  = 2;
     string password = 3;
-    Meta meta = 4;
+    string meta = 4;
     int32 id = 5;
 }
 
@@ -69,19 +65,19 @@ message Card {
 	sint32 ExpMonth   = 3;      //Срок действия: месяц
 	sint32 ExpYear    = 4;      //Срок действия: год
 	sint32 CVC        = 5;      //CVC или CVV2 — код из 3 или 4 цифр для совершения интернет-платежей, расположенный на обратной стороне
-	Meta meta = 6; 
+	string meta = 6; 
     int32 id = 7;
 }
 
 message Binary {
     bytes bytes = 1;
-    Meta meta = 2;
+    string meta = 2;
     int32 id = 8;
 }
 
 message Text {
     string text = 1;
-    Meta meta = 2;
+    string meta = 2;
     int32 id = 3;
 }
 

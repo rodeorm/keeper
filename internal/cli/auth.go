@@ -10,8 +10,8 @@ import (
 	"github.com/rodeorm/keeper/internal/core"
 )
 
-// AuthScreen данные для аутентификации
-type AuthScreen struct {
+// Auth данные для аутентификации
+type Auth struct {
 	FocusIndex int
 	Inputs     []textinput.Model
 	CursorMode cursor.Mode
@@ -20,21 +20,20 @@ type AuthScreen struct {
 }
 
 func (m *Model) updateAuthInputs(msg tea.Msg) tea.Cmd {
-	cmds := make([]tea.Cmd, len(m.AuthScreen.Inputs))
+	cmds := make([]tea.Cmd, len(m.Auth.Inputs))
 
-	for i := range m.AuthScreen.Inputs {
-		m.AuthScreen.Inputs[i], cmds[i] = m.AuthScreen.Inputs[i].Update(msg)
+	for i := range m.Auth.Inputs {
+		m.Auth.Inputs[i], cmds[i] = m.Auth.Inputs[i].Update(msg)
 	}
 
 	return tea.Batch(cmds...)
 }
 
-// Update loop for the second view after a choice has been made
-func updateAuthScreen(msg tea.Msg, m *Model) (tea.Model, tea.Cmd) {
+func updateAuth(msg tea.Msg, m *Model) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case authMsg:
 		if !msg.auth {
-			m.AuthScreen.err = fmt.Errorf("неправильный логин или пароль")
+			m.Auth.err = fmt.Errorf("неправильный логин или пароль")
 		} else {
 			m.CurrentScreen = "verify"
 		}
@@ -46,39 +45,39 @@ func updateAuthScreen(msg tea.Msg, m *Model) (tea.Model, tea.Cmd) {
 
 			// Пользователь нажал на enter, когда выбрана кнопка Submit?
 			// Если так, то отправляем сообщение на grpc и возвращаемся на лого форму.
-			if s == "enter" && m.AuthScreen.FocusIndex == len(m.AuthScreen.Inputs) {
-				m.User = core.User{Login: m.AuthScreen.Inputs[0].Value(),
-					Password: m.AuthScreen.Inputs[1].Value(),
+			if s == "enter" && m.Auth.FocusIndex == len(m.Auth.Inputs) {
+				m.User = core.User{Login: m.Auth.Inputs[0].Value(),
+					Password: m.Auth.Inputs[1].Value(),
 				}
 
 				return m, m.authUser
 			}
 
 			if s == "up" || s == "shift+tab" {
-				m.AuthScreen.FocusIndex--
+				m.Auth.FocusIndex--
 			} else {
-				m.AuthScreen.FocusIndex++
+				m.Auth.FocusIndex++
 			}
 
-			if m.AuthScreen.FocusIndex > len(m.AuthScreen.Inputs) {
-				m.AuthScreen.FocusIndex = 0
-			} else if m.AuthScreen.FocusIndex < 0 {
-				m.AuthScreen.FocusIndex = len(m.AuthScreen.Inputs)
+			if m.Auth.FocusIndex > len(m.Auth.Inputs) {
+				m.Auth.FocusIndex = 0
+			} else if m.Auth.FocusIndex < 0 {
+				m.Auth.FocusIndex = len(m.Auth.Inputs)
 			}
 
-			cmds := make([]tea.Cmd, len(m.AuthScreen.Inputs))
-			for i := 0; i <= len(m.AuthScreen.Inputs)-1; i++ {
-				if i == m.AuthScreen.FocusIndex {
+			cmds := make([]tea.Cmd, len(m.Auth.Inputs))
+			for i := 0; i <= len(m.Auth.Inputs)-1; i++ {
+				if i == m.Auth.FocusIndex {
 					// Устанавливаем фокус
-					cmds[i] = m.AuthScreen.Inputs[i].Focus()
-					m.AuthScreen.Inputs[i].PromptStyle = focusedStyle
-					m.AuthScreen.Inputs[i].TextStyle = focusedStyle
+					cmds[i] = m.Auth.Inputs[i].Focus()
+					m.Auth.Inputs[i].PromptStyle = focusedStyle
+					m.Auth.Inputs[i].TextStyle = focusedStyle
 					continue
 				}
 				// Убираем фокус
-				m.AuthScreen.Inputs[i].Blur()
-				m.AuthScreen.Inputs[i].PromptStyle = noStyle
-				m.AuthScreen.Inputs[i].TextStyle = noStyle
+				m.Auth.Inputs[i].Blur()
+				m.Auth.Inputs[i].PromptStyle = noStyle
+				m.Auth.Inputs[i].TextStyle = noStyle
 			}
 			return m, tea.Batch(cmds...)
 		}
@@ -88,9 +87,9 @@ func updateAuthScreen(msg tea.Msg, m *Model) (tea.Model, tea.Cmd) {
 	return *m, cmd
 }
 
-// initAuthScreen инцицилизирует форму для регистрации по умолчанию
-func initAuthScreen() AuthScreen {
-	m := AuthScreen{
+// initAuth инцицилизирует форму для регистрации по умолчанию
+func initAuth() Auth {
+	m := Auth{
 		Inputs: make([]textinput.Model, 2),
 	}
 	var t textinput.Model
@@ -117,8 +116,8 @@ func initAuthScreen() AuthScreen {
 	return m
 }
 
-// authView - форма для авторизации
-func authView(m *Model) string {
+// viewAuth - форма для авторизации
+func viewAuth(m *Model) string {
 	var msg string
 	var b strings.Builder
 
@@ -127,15 +126,15 @@ func authView(m *Model) string {
 		keywordStyle.Render("пароль"),
 		keywordStyle.Render("адрес электронной почты"))
 
-	for i := range m.AuthScreen.Inputs {
-		b.WriteString(m.AuthScreen.Inputs[i].View())
-		if i < len(m.AuthScreen.Inputs)-1 {
+	for i := range m.Auth.Inputs {
+		b.WriteString(m.Auth.Inputs[i].View())
+		if i < len(m.Auth.Inputs)-1 {
 			b.WriteRune('\n')
 		}
 	}
 
 	button := &blurredButton
-	if m.AuthScreen.FocusIndex == len(m.AuthScreen.Inputs) {
+	if m.Auth.FocusIndex == len(m.Auth.Inputs) {
 		button = &focusedButton
 	}
 	fmt.Fprintf(&b, "\n\n%s\n\n", *button)

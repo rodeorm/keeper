@@ -7,13 +7,13 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 )
 
-type MainScreen struct {
+type Main struct {
 	Choice int  // Текущий выбор
 	Chosen bool // Cделан выбор или нет
 }
 
-func initMainScreen() MainScreen {
-	return MainScreen{}
+func initMain() Main {
+	return Main{}
 }
 
 // updateMain loop для экрана Main
@@ -22,29 +22,29 @@ func updateMain(msg tea.Msg, m *Model) (tea.Model, tea.Cmd) {
 	case tea.KeyMsg:
 		switch msg.String() {
 		case "j", "down":
-			m.MainScreen.Choice++
-			if m.MainScreen.Choice > 3 {
-				m.MainScreen.Choice = 3
+			m.Main.Choice++
+			if m.Main.Choice > 3 {
+				m.Main.Choice = 3
 			}
 		case "k", "up":
-			m.MainScreen.Choice--
-			if m.MainScreen.Choice < 0 {
-				m.MainScreen.Choice = 0
+			m.Main.Choice--
+			if m.Main.Choice < 0 {
+				m.Main.Choice = 0
 			}
 		case "enter":
-			m.MainScreen.Chosen = true
-			switch m.MainScreen.Choice {
+			m.Main.Chosen = true
+			switch m.Main.Choice {
 			case 0:
-				m.CurrentScreen = "card"
-				return m, textinput.Blink
+				m.CurrentScreen = "cardList"
+				return m, tea.Batch(textinput.Blink, m.listCard)
 			case 1:
-				m.CurrentScreen = "couple"
+				m.CurrentScreen = "coupleList"
 				return m, textinput.Blink
 			case 2:
-				m.CurrentScreen = "text"
+				m.CurrentScreen = "textList"
 				return m, textinput.Blink
 			case 3:
-				m.CurrentScreen = "bin"
+				m.CurrentScreen = "binList"
 				return m, textinput.Blink
 			}
 		}
@@ -53,9 +53,8 @@ func updateMain(msg tea.Msg, m *Model) (tea.Model, tea.Cmd) {
 	return m, nil
 }
 
-// mainView - первое представление, где начинается работа в программе
-func mainView(m *Model) string {
-	c := m.MainScreen.Choice //  Забираем значение из модели, что выбрано
+func viewMain(m *Model) string {
+	c := m.Main.Choice //  Забираем значение из модели, что выбрано
 	var choices, tpl string
 
 	tpl = fmt.Sprintf("Добро пожловать, %s!\n\nВыберите раздел данных:\n",

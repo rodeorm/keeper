@@ -11,9 +11,10 @@ import (
 func (s *postgresStorage) createTables(ctx context.Context) error {
 	_, err := s.DB.ExecContext(ctx,
 
-		`	
+		`	/*
 			DROP SCHEMA cmn CASCADE; --ВРЕМЕННО
 			DROP SCHEMA dbo CASCADE; --ВРЕМЕННО
+			*/
 			CREATE SCHEMA IF NOT EXISTS cmn;
 			CREATE SCHEMA IF NOT EXISTS dbo;
 			CREATE TABLE IF NOT EXISTS cmn.Users 

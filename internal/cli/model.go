@@ -16,13 +16,18 @@ type Model struct {
 	Verified         bool      // Подтвержден OTP или нет
 	Quitting         bool
 
-	LogoScreen
-	RegScreen
-	AuthScreen
-	VerifyScreen
-	MainScreen
-	CardCreateScreen
-	CardSelectScreen
+	cards    []core.Card
+	couples  []core.Couple
+	texts    []core.Text
+	binaries []core.Binary
+
+	Logo
+	Reg
+	Auth
+	Verify
+	Main
+	CardCreate
+	CardList
 
 	sc proto.KeeperServiceClient
 }
@@ -37,11 +42,14 @@ func InitialModel(sc proto.KeeperServiceClient) Model {
 	m.Authenticated = false
 	m.Verified = false
 	m.Quitting = false
-	m.LogoScreen = initLogoScreen()
-	m.AuthScreen = initAuthScreen()
-	m.RegScreen = initRegScreen()
-	m.VerifyScreen = initVerifyScreen()
-	m.MainScreen = initMainScreen()
+	m.cards = make([]core.Card, 0)
+	m.Logo = initLogo()
+	m.Auth = initAuth()
+	m.Reg = initReg()
+	m.Verify = initVerify()
+	m.Main = initMain()
+	m.CardCreate = initCardCreate()
+	m.CardList = initCardList()
 	m.sc = sc
 
 	return m
