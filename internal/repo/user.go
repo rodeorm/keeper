@@ -94,11 +94,18 @@ func (s *postgresStorage) VerifyUserOTP(ctx context.Context, otpLiveTime int, u 
 		}
 	}()
 
-	checkOTP := `SELECT e.id FROM cmn.emails AS e INNER JOIN cmn.Users AS u ON u.id = e.UserID WHERE u.Login = $1 AND e.sendeddate + ($2 * INTERVAL '1 hour') > NOW() 
-    AND e.Used = false AND e.OTP = $3;`
+	checkUser := `SELECT u.id FROM cmn.Users AS u WHERE u.Login = $1;`
+	checkOTP := `SELECT e.id FROM cmn.emails AS e WHERE e.UserID = $1 AND e.sendeddate + ($2 * INTERVAL '1 hour') > NOW() AND e.Used = false AND e.OTP = $3;`
 	useOTP := `UPDATE cmn.emails SET Used = true WHERE id = $1`
 
-	err := tx.GetContext(ctx, &em.ID, checkOTP, u.Login, otpLiveTime, u.OTP)
+	err := tx.GetContext(ctx, &u.ID, checkUser, u.Login)
+	if err != nil && err != sql.ErrNoRows {
+		tx.Rollback()
+		logger.Log.Error("ошибка при проверке пользователя", zap.String("error", err.Error()))
+		return false
+	}
+
+	err = tx.GetContext(ctx, &em.ID, checkOTP, u.ID, otpLiveTime, u.OTP)
 	if err != nil && err != sql.ErrNoRows {
 		tx.Rollback()
 		logger.Log.Error("ошибка при проверке OTP", zap.String("error", err.Error()))

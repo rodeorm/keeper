@@ -32,6 +32,7 @@ func GetUserIdentity(ctx context.Context, jwtKey string) (*core.User, error) {
 
 // PutUserKeyToMD помещает идентификатор пользователя в мету
 func PutLoginToMD(login, jwtKey string, userID, sessionID, tokenLiveTime int) (metadata.MD, error) {
+
 	val, err := crypt.CodeSession(login, userID, sessionID, jwtKey, tokenLiveTime)
 	if err != nil {
 		return nil, err

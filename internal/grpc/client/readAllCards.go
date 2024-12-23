@@ -9,12 +9,11 @@ import (
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
 
-	"github.com/rodeorm/keeper/internal/core"
 	"github.com/rodeorm/keeper/internal/grpc/meta"
 	"github.com/rodeorm/keeper/internal/grpc/proto"
 )
 
-func ReadAllCards(u *core.User, ctxBg context.Context, token string, c proto.KeeperServiceClient) ([]*proto.Card, error) {
+func ReadAllCards(ctxBg context.Context, token string, c proto.KeeperServiceClient) ([]*proto.Card, error) {
 	var header, trailer metadata.MD
 	ctx, cancel := context.WithTimeout(ctxBg, 10*time.Second)
 	defer cancel()

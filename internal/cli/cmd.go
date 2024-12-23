@@ -42,18 +42,36 @@ func (m *Model) verifyOTP() tea.Msg {
 }
 
 func (m *Model) createCard() tea.Msg {
-	return nil
+	ctx := context.TODO()
+	msg := cardCreateMsg{}
+	msg.err = client.CreateCard(ctx, m.Token, m.CardCreate.crd, m.sc)
+	return msg
 }
 
 func (m *Model) listCard() tea.Msg {
-	cards := make([]core.Card, 0)
+	ctx := context.TODO()
 
-	cards = append(cards, core.Card{CardNumber: "1231 2311 3112 2212", OwnerName: "Alexander 1", ExpMonth: 10, ExpYear: 22, Meta: "this is desc 1"})
-	cards = append(cards, core.Card{CardNumber: "1231 2312 3112 2212", OwnerName: "Alexander 2", ExpMonth: 10, ExpYear: 22, Meta: "this is desc 2"})
-	cards = append(cards, core.Card{CardNumber: "1231 2315 3112 2212", OwnerName: "Alexander 3", ExpMonth: 10, ExpYear: 22, Meta: "this is desc 3"})
-	cards = append(cards, core.Card{CardNumber: "1231 2312 3112 2212", OwnerName: "Alexander 4", ExpMonth: 10, ExpYear: 22, Meta: "this is desc 4"})
+	cds, err := client.ReadAllCards(ctx, m.Token, m.sc)
+	msg := cardListMsg{}
+	if err != nil {
+		msg.err = err
+		return msg
+	}
 
-	return cardListMsg{cards: cards}
+	msg.cards = make([]core.Card, len(cds))
+
+	for _, v := range cds {
+		msg.cards = append(msg.cards,
+			core.Card{CardNumber: v.CardNumber,
+				OwnerName: v.OwnerName,
+				ExpMonth:  int(v.ExpMonth),
+				ExpYear:   int(v.ExpYear),
+				Meta:      v.Meta,
+				ID:        int(v.Id),
+				CVC:       int(v.CVC)})
+	}
+
+	return msg
 }
 
 func (m *Model) createBin() tea.Msg {

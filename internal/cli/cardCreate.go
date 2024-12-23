@@ -2,6 +2,7 @@ package cli
 
 import (
 	"fmt"
+	"strconv"
 	"strings"
 
 	"github.com/charmbracelet/bubbles/cursor"
@@ -10,14 +11,13 @@ import (
 	"github.com/rodeorm/keeper/internal/core"
 )
 
-// CardCreate данные для создания записи о новой карте
+// CardCreate данные карты
 type CardCreate struct {
 	FocusIndex int
 	Inputs     []textinput.Model
 	CursorMode cursor.Mode
-
-	crd core.Card
-	err error // Ошибка при создании карты
+	crd        core.Card
+	err        string
 }
 
 func (m *Model) updateCardCreateInputs(msg tea.Msg) tea.Cmd {
@@ -33,6 +33,12 @@ func (m *Model) updateCardCreateInputs(msg tea.Msg) tea.Cmd {
 func updateCardCreate(msg tea.Msg, m *Model) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case cardCreateMsg:
+		{
+			if msg.err != nil {
+				m.CardCreate.err = msg.err.Error()
+			}
+			m.CurrentScreen = "cardList"
+		}
 	case tea.KeyMsg:
 		switch msg.String() {
 		// Переместить фокус на следующее поле
@@ -43,10 +49,15 @@ func updateCardCreate(msg tea.Msg, m *Model) (tea.Model, tea.Cmd) {
 			// Если так, то отправляем сообщение на grpc и возвращаемся на лого форму.
 			if s == "enter" && m.CardCreate.FocusIndex == len(m.CardCreate.Inputs) {
 
-				m.User = core.User{Login: m.CardCreate.Inputs[0].Value(),
-					Password: m.CardCreate.Inputs[1].Value(),
-					Email:    m.CardCreate.Inputs[2].Value(),
-					Name:     m.CardCreate.Inputs[3].Value(),
+				expMonth, _ := strconv.Atoi(m.CardCreate.Inputs[2].Value()) // Валидатор должен был отловить до этого момента, поэтому ошибки не ожидаем
+				expYear, _ := strconv.Atoi(m.CardCreate.Inputs[3].Value())
+				cvc, _ := strconv.Atoi(m.CardCreate.Inputs[4].Value())
+				m.CardCreate.crd = core.Card{CardNumber: m.CardCreate.Inputs[0].Value(),
+					OwnerName: m.CardCreate.Inputs[1].Value(),
+					ExpMonth:  expMonth,
+					ExpYear:   expYear,
+					CVC:       cvc,
+					Meta:      m.CardCreate.Inputs[5].Value(),
 				}
 
 				return m, m.createCard
@@ -87,10 +98,10 @@ func updateCardCreate(msg tea.Msg, m *Model) (tea.Model, tea.Cmd) {
 	return *m, cmd
 }
 
-// initCardCreateScreen инцицилизирует форму для регистрации по умолчанию
+// initCardCreate инцицилизирует форму для регистрации по умолчанию
 func initCardCreate() CardCreate {
 	m := CardCreate{
-		Inputs: make([]textinput.Model, 4),
+		Inputs: make([]textinput.Model, 6),
 	}
 	var t textinput.Model
 	for i := range m.Inputs {
@@ -100,21 +111,29 @@ func initCardCreate() CardCreate {
 
 		switch i {
 		case 0:
-			t.Placeholder = "Login"
+			t.Validate = ccnValidator
+			t.Placeholder = "XXXX XXXX XXXX XXXX"
 			t.Focus()
 			t.PromptStyle = focusedStyle
 			t.TextStyle = focusedStyle
 		case 1:
-			t.Placeholder = "Password"
-			t.EchoMode = textinput.EchoPassword
+			t.Placeholder = "Name"
 			t.PromptStyle = focusedStyle
 			t.TextStyle = focusedStyle
 		case 2:
-			t.Placeholder = "Email"
+			t.Placeholder = "Exp.month"
 			t.PromptStyle = focusedStyle
 			t.TextStyle = focusedStyle
 		case 3:
-			t.Placeholder = "Name"
+			t.Placeholder = "Exp.year"
+			t.PromptStyle = focusedStyle
+			t.TextStyle = focusedStyle
+		case 4:
+			t.Placeholder = "CVV"
+			t.PromptStyle = focusedStyle
+			t.TextStyle = focusedStyle
+		case 5:
+			t.Placeholder = "Meta"
 			t.PromptStyle = focusedStyle
 			t.TextStyle = focusedStyle
 		}
@@ -124,15 +143,13 @@ func initCardCreate() CardCreate {
 	return m
 }
 
+// viewCardCreate - форма для регистрации
 func viewCardCreate(m *Model) string {
 	var msg string
 	var b strings.Builder
 
-	msg = fmt.Sprintf("Хотите зарегистрироваться?\n\nОтлично! Просто введите  %s, %s, %s и %s \n",
-		keywordStyle.Render("логин"),
-		keywordStyle.Render("пароль"),
-		keywordStyle.Render("адрес электронной почты"),
-		keywordStyle.Render("имя"))
+	msg = fmt.Sprintf("Хотите добавить данные новой %s?\n\nПросто заполните форму ниже \n",
+		keywordStyle.Render("кредитной карты"))
 
 	for i := range m.CardCreate.Inputs {
 		b.WriteString(m.CardCreate.Inputs[i].View())
@@ -149,8 +166,8 @@ func viewCardCreate(m *Model) string {
 
 	msg += "\n" + b.String()
 
-	if m.CardCreate.err != nil {
-		return msg + m.CardCreate.err.Error() + footer()
+	if m.CardCreate.err != "" {
+		return msg + err(m.CardCreate.err) + footer()
 	}
 
 	return m.header() + msg + footer()

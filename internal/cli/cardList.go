@@ -51,7 +51,8 @@ func updateCardList(msg tea.Msg, m *Model) (tea.Model, tea.Cmd) {
 		switch msg.String() {
 		case "r":
 			return m, m.listCard
-		case "с":
+		case "c":
+			m.CardCreate = initCardCreate()
 			m.CurrentScreen = "cardCreate"
 			return m, nil
 		case "ctrl+z":

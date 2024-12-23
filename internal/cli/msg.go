@@ -4,12 +4,14 @@ import "github.com/rodeorm/keeper/internal/core"
 
 // cardCreateMsg - сообщение о результате аутентификации по логину и паролю
 type cardCreateMsg struct {
-	id int
+	id  int
+	err error
 }
 
 // cardListMsg - сообщение о результате аутентификации по логину и паролю
 type cardListMsg struct {
 	cards []core.Card
+	err   error
 }
 
 // authMsg - сообщение о результате аутентификации по логину и паролю

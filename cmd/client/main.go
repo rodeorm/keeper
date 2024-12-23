@@ -26,7 +26,7 @@ func main() {
 		//	panic(err)
 	}
 	// устанавливаем соединение с сервером
-	conn, err := grpc.NewClient(config.ServerAddress, grpc.WithBlock(), grpc.WithTransportCredentials(insecure.NewCredentials()), grpc.WithDefaultCallOptions(grpc.UseCompressor(gzip.Name)))
+	conn, err := grpc.NewClient(config.ServerAddress, grpc.WithTransportCredentials(insecure.NewCredentials()), grpc.WithDefaultCallOptions(grpc.UseCompressor(gzip.Name)))
 	if err != nil {
 		log.Println("Ошибка при попытке установить соединение с сервером")
 		os.Exit(1)

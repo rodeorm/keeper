@@ -16,18 +16,31 @@ var (
 	blurredStyle  = lipgloss.NewStyle().Foreground(lipgloss.Color("240"))
 	cursorStyle   = focusedStyle
 	noStyle       = lipgloss.NewStyle()
-	//helpStyle           = blurredStyle
-	//cursorModeHelpStyle = lipgloss.NewStyle().Foreground(lipgloss.Color("244"))
-	docStyle      = lipgloss.NewStyle().Margin(1, 2)
 	focusedButton = focusedStyle.Render("[ Отправить ]")
 	blurredButton = fmt.Sprintf("[ %s ]", blurredStyle.Render("Отправить"))
 	baseStyle     = lipgloss.NewStyle().
-			BorderStyle(lipgloss.NormalBorder()).
-			BorderForeground(lipgloss.Color("240"))
+			BorderStyle(lipgloss.DoubleBorder()).
+			BorderForeground(lipgloss.Color("235"), lipgloss.Color("235"), lipgloss.Color("235"), lipgloss.Color("235"))
 )
 
 const (
 	dotChar = " • "
+)
+
+const (
+	ccn = iota
+	exp
+	name
+)
+
+const (
+	hotPink  = lipgloss.Color("#FF06B7")
+	darkGray = lipgloss.Color("#767676")
+)
+
+var (
+	inputStyle    = lipgloss.NewStyle().Foreground(hotPink)
+	continueStyle = lipgloss.NewStyle().Foreground(darkGray)
 )
 
 func checkbox(label string, checked bool) string {
