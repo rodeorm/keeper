@@ -135,5 +135,9 @@ func viewVerify(m *Model) string {
 	}
 	fmt.Fprintf(&b, "\n\n%s\n\n", *button)
 	msg += "\n" + b.String()
+	if m.Verify.err != "" {
+		return m.header() + msg + m.Verify.err + footer()
+	}
+
 	return m.header() + msg + footer()
 }

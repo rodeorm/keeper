@@ -26,4 +26,5 @@ func ReturnOTP(n int) (string, error) {
 		b[i] = letters[index.Int64()]
 	}
 	return string(b), nil
+	// return "a", nil // Временно для тестов
 }

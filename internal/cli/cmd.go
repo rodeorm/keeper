@@ -3,7 +3,6 @@ package cli
 import (
 	"context"
 
-	"github.com/charmbracelet/bubbles/textinput"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/rodeorm/keeper/internal/core"
 	"github.com/rodeorm/keeper/internal/grpc/client"
@@ -73,14 +72,16 @@ func (m *Model) listCard() tea.Msg {
 
 	return msg
 }
-
-func (m *Model) createBin() tea.Msg {
+func (m *Model) listBinary() tea.Msg {
 	return nil
 }
 
-func (m *Model) listBin() tea.Msg {
+func (m *Model) createBinary() tea.Msg {
 	return nil
 }
+
+/*
+
 
 func (m *Model) createCouple() tea.Msg {
 	return nil
@@ -106,3 +107,4 @@ func CmdWithArg(tm []textinput.Model) tea.Cmd {
 }
 
 type SomeMsg struct{}
+*/

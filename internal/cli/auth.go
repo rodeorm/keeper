@@ -121,10 +121,9 @@ func viewAuth(m *Model) string {
 	var msg string
 	var b strings.Builder
 
-	msg = fmt.Sprintf("Хотите зарегистрироваться?\n\nОтлично! Просто введите  %s, %s и %s.\n",
+	msg = fmt.Sprintf("Хотите авторизоваться?\n\nОтлично! Просто введите  %s и %s.\n",
 		keywordStyle.Render("логин"),
-		keywordStyle.Render("пароль"),
-		keywordStyle.Render("адрес электронной почты"))
+		keywordStyle.Render("пароль"))
 
 	for i := range m.Auth.Inputs {
 		b.WriteString(m.Auth.Inputs[i].View())
@@ -140,5 +139,5 @@ func viewAuth(m *Model) string {
 	fmt.Fprintf(&b, "\n\n%s\n\n", *button)
 	msg += "\n" + b.String()
 	msg += "\n" + subtleStyle.Render("Для выхода нажмите ") + keywordStyle.Render("ctrl+c")
-	return msg
+	return m.header() + msg + footer()
 }

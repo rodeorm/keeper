@@ -2,10 +2,10 @@ package cli
 
 // View (Представление) — это функция, которая отображает модель в виде, понятном пользователю.
 func (m Model) View() string {
-	s := ""
+	var s string
 
 	if m.Quitting {
-		return "\n  See you later!\n\n"
+		return "\n  До свидания!\n\n"
 	}
 	switch m.CurrentScreen {
 	case "logo":
@@ -22,6 +22,10 @@ func (m Model) View() string {
 		s = viewCardCreate(&m)
 	case "cardList":
 		s = viewCardList(&m)
+	case "binaryCreate":
+		s = viewBinaryCreate(&m)
+	case "binaryList":
+		s = viewBinaryList(&m)
 	}
-	return mainStyle.Render("\n" + s + "\n\n")
+	return mainStyle.Render(s)
 }

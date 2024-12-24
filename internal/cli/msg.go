@@ -2,6 +2,15 @@ package cli
 
 import "github.com/rodeorm/keeper/internal/core"
 
+type binaryCreateMsg struct {
+	err error
+}
+
+type binaryListMsg struct {
+	bins []core.Binary
+	err  error
+}
+
 // cardCreateMsg - сообщение о результате аутентификации по логину и паролю
 type cardCreateMsg struct {
 	id  int

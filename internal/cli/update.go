@@ -15,7 +15,8 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			return m, tea.Quit
 		}
 	}
-	// // Всегда перехватывем esc (обнуляем приложение)
+
+	// Всегда перехватывем esc (обнуляем приложение)
 	if msg, ok := msg.(tea.KeyMsg); ok {
 		k := msg.String()
 		if k == "esc" {
@@ -39,6 +40,10 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		return updateCardCreate(msg, &m)
 	case "cardList":
 		return updateCardList(msg, &m)
+	case "binaryCreate":
+		return updateBinaryCreate(msg, &m)
+	case "binaryList":
+		return updateBinaryList(msg, &m)
 	default:
 		return updateLogo(msg, &m)
 	}

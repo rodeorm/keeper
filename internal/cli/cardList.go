@@ -56,14 +56,14 @@ func updateCardList(msg tea.Msg, m *Model) (tea.Model, tea.Cmd) {
 			m.CurrentScreen = "cardCreate"
 			return m, nil
 		case "ctrl+z":
-			if m.table.Focused() {
-				m.table.Blur()
+			if m.CardList.table.Focused() {
+				m.CardList.table.Blur()
 			} else {
-				m.table.Focus()
+				m.CardList.table.Focus()
 			}
 		case "enter":
 			return m, tea.Batch(
-				tea.Printf("Выбрана карта номер %s!", m.table.SelectedRow()[1]),
+				tea.Printf("Выбрана карта номер %s!", m.CardList.table.SelectedRow()[1]),
 			)
 		}
 	case cardListMsg:
@@ -83,5 +83,5 @@ func updateCardList(msg tea.Msg, m *Model) (tea.Model, tea.Cmd) {
 }
 
 func viewCardList(m *Model) string {
-	return m.header() + baseStyle.Render(m.table.View()) + "\n" + footerTable() + "\n" + footer()
+	return m.header() + baseStyle.Render(m.CardList.table.View()) + "\n" + footerTable() + "\n" + footer()
 }

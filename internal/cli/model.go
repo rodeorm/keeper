@@ -28,6 +28,8 @@ type Model struct {
 	Main
 	CardCreate
 	CardList
+	BinaryCreate
+	BinaryList
 
 	sc proto.KeeperServiceClient
 }
@@ -50,6 +52,8 @@ func InitialModel(sc proto.KeeperServiceClient) Model {
 	m.Main = initMain()
 	m.CardCreate = initCardCreate()
 	m.CardList = initCardList()
+	m.BinaryList = initBinaryList()
+	m.BinaryCreate = initBinaryCreate()
 	m.sc = sc
 
 	return m
