@@ -11,15 +11,13 @@ type Model struct {
 	User             core.User // Данные текущего пользователя
 	CurrentScreen    string    // Текущий экран для отображения
 	Token            string    // Токен
-	OTPMessageSended bool      // Было послано сообщение с OTP
-	Authenticated    bool      // Авторизован пользователь или нет
-	Verified         bool      // Подтвержден OTP или нет
+	FilePath         string
+	OTPMessageSended bool // Было послано сообщение с OTP
+	Authenticated    bool // Авторизован пользователь или нет
+	Verified         bool // Подтвержден OTP или нет
 	Quitting         bool
 
-	cards    []core.Card
-	couples  []core.Couple
-	texts    []core.Text
-	binaries []core.Binary
+	cards []core.Card
 
 	Logo
 	Reg
@@ -36,7 +34,7 @@ type Model struct {
 }
 
 // InitialModel инициализирует модель со значениями по умолчанию
-func InitialModel(sc proto.KeeperServiceClient) Model {
+func InitialModel(sc proto.KeeperServiceClient, filePath string) Model {
 	var m Model
 	m.CurrentScreen = "logo"
 	m.User = core.User{}
@@ -51,6 +49,7 @@ func InitialModel(sc proto.KeeperServiceClient) Model {
 	m.Reg = initReg()
 	m.Verify = initVerify()
 	m.Main = initMain()
+	m.FilePath = filePath
 	// Данные кредитных карт
 	m.CardCreate = initCardCreate()
 	m.CardList = initCardList()

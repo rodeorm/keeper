@@ -27,22 +27,6 @@ const (
 	dotChar = " • "
 )
 
-const (
-	ccn = iota
-	exp
-	name
-)
-
-const (
-	hotPink  = lipgloss.Color("#FF06B7")
-	darkGray = lipgloss.Color("#767676")
-)
-
-var (
-	inputStyle    = lipgloss.NewStyle().Foreground(hotPink)
-	continueStyle = lipgloss.NewStyle().Foreground(darkGray)
-)
-
 func checkbox(label string, checked bool) string {
 	if checked {
 		return checkboxStyle.Render("[x] " + label)

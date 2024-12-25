@@ -17,7 +17,6 @@ type binaryListMsg struct {
 
 // cardCreateMsg - сообщение о результате аутентификации по логину и паролю
 type cardCreateMsg struct {
-	id  int
 	err error
 }
 

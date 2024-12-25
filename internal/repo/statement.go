@@ -20,11 +20,15 @@ func (s *postgresStorage) prepareStatements() error {
 		return err
 	}
 
-	stmtAddByte, err := s.DB.Preparex(`INSERT INTO dbo.Data (userid, typeid, bytedata, createddate) SELECT $1, $2, $3, $4 RETURNING id;`)
+	stmtAddByte, err := s.DB.Preparex(`INSERT INTO dbo.Data (userid, typeid, bytedata, createddate, name, meta) SELECT $1, $2, $3, $4, $5, $6 RETURNING id;`)
 	if err != nil {
 		return err
 	}
-	stmtSelectByte, err := s.DB.Preparex(`SELECT id, bytedata, createddate FROM dbo.Data WHERE userid = $1 AND typeid = $2;`)
+	stmtSelectAllBytes, err := s.DB.Preparex(`SELECT id, CASE WHEN typeid = 1 THEN NULL ELSE bytedata END, name, meta, createddate FROM dbo.Data WHERE userid = $1 AND typeid = $2;`)
+	if err != nil {
+		return err
+	}
+	stmtSelectByte, err := s.DB.Preparex(`SELECT id, bytedata, createddate FROM dbo.Data WHERE userid = $1 AND id = $2;`)
 	if err != nil {
 		return err
 	}
@@ -66,6 +70,7 @@ func (s *postgresStorage) prepareStatements() error {
 	s.preparedStatements["AuthUser"] = stmtAuthUser
 	s.preparedStatements["VerifyUser"] = stmtVerifyUser
 	s.preparedStatements["AddByte"] = stmtAddByte
+	s.preparedStatements["SelectAllBytes"] = stmtSelectAllBytes
 	s.preparedStatements["SelectByte"] = stmtSelectByte
 	s.preparedStatements["UpdateByte"] = stmtUpdateByte
 	s.preparedStatements["DeleteByte"] = stmtDeleteByte

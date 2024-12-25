@@ -18,7 +18,7 @@ func (g *grpcServer) ReadAllCards(ctx context.Context, cr *proto.ReadAllCardsReq
 		return nil, status.Error(codes.PermissionDenied, `отказано в доступе`)
 	}
 
-	cards, err := g.cfg.CardStorager.SelectCardByUser(ctx, usr)
+	cards, err := g.cfg.CardStorager.SelectAllCardsByUser(ctx, usr)
 	if err != nil {
 		return nil, status.Error(codes.DataLoss, `не удалось получить данные`)
 	}

@@ -35,7 +35,6 @@ func Start(config *cfg.Server, wg *sync.WaitGroup, exit chan struct{}) {
 func (f *Filler) StartFilling(exit chan struct{}, wg *sync.WaitGroup) {
 	logger.Log.Info("StartFilling",
 		zap.String("Филлер стартовал", "Успешно"))
-
 	ctx := context.TODO()
 	for {
 		select {
@@ -50,6 +49,7 @@ func (f *Filler) StartFilling(exit chan struct{}, wg *sync.WaitGroup) {
 		default:
 			go func() {
 				msgs, err := f.messageStorage.SelectUnsendedMessages(ctx)
+
 				if err != nil {
 					logger.Log.Error("StartFilling",
 						zap.String("ошибка при получении сообщений к отправке", err.Error()),

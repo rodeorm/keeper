@@ -27,4 +27,5 @@ type ServerConfig struct {
 //ClientConfig - конфигурация клиента
 type ClientConfig struct {
 	ServerAddress string `yaml:"SERVER_ADDRESS"` //Адрес сервера, с которым должно быть установлено соединение
+	FilePath      string `yaml:"FILE_PATH"`
 }

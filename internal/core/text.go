@@ -11,7 +11,7 @@ import (
 // TextStorager абстрагирует хранилище текстовых данных
 type TextStorager interface {
 	AddTextByUser(context.Context, *Text, *User) error
-	SelectTextByUser(context.Context, *User) ([]Text, error)
+	SelectAllTextsByUser(context.Context, *User) ([]Text, error)
 	UpdateTextByUser(context.Context, *Text, *User) error
 	DeleteTextByUser(context.Context, *Text, *User) error
 }

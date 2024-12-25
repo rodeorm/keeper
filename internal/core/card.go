@@ -11,7 +11,7 @@ import (
 // CardStorager абстрагирует хранилище данных банковских карт
 type CardStorager interface {
 	AddCardByUser(context.Context, *Card, *User) error
-	SelectCardByUser(context.Context, *User) ([]Card, error)
+	SelectAllCardsByUser(context.Context, *User) ([]Card, error)
 	UpdateCardByUser(context.Context, *Card, *User) error
 	DeleteCardByUser(context.Context, *Card, *User) error
 }

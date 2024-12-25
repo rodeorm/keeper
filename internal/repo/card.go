@@ -14,16 +14,16 @@ func (s *postgresStorage) AddCardByUser(ctx context.Context, c *core.Card, u *co
 	if err != nil {
 		return err
 	}
-	err = s.preparedStatements["AddByte"].GetContext(ctx, c, u.ID, core.CardType, d, time.Now())
+	err = s.preparedStatements["AddByte"].GetContext(ctx, c, u.ID, core.CardType, d, time.Now(), "", c.Meta)
 	if err != nil {
 		return err
 	}
 	return nil
 }
-func (s *postgresStorage) SelectCardByUser(ctx context.Context, u *core.User) ([]core.Card, error) {
+func (s *postgresStorage) SelectAllCardsByUser(ctx context.Context, u *core.User) ([]core.Card, error) {
 	cyphCards := make([]core.Data, 0)
 	cards := make([]core.Card, 0)
-	err := s.preparedStatements["SelectByte"].SelectContext(ctx, &cyphCards, u.ID, core.CardType)
+	err := s.preparedStatements["SelectAllBytes"].SelectContext(ctx, &cyphCards, u.ID, core.CardType)
 	if err != nil {
 		return nil, err
 	}

@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-func cvvValidator(s string) error {
+func CVVValidator(s string) error {
 	// The CVV should be a number of 3 digits
 	// Since the input will already ensure that the CVV is a string of length 3,
 	// All we need to do is check that it is a number

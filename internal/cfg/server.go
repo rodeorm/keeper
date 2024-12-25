@@ -18,6 +18,7 @@ func ConfigurateServer(configFile string) (*Server, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	// Определяем реализацию хранилищ
 	srv.BinaryStorager = storage
 	srv.CardStorager = storage

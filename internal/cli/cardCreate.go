@@ -38,6 +38,7 @@ func updateCardCreate(msg tea.Msg, m *Model) (tea.Model, tea.Cmd) {
 				m.CardCreate.err = msg.err.Error()
 			}
 			m.CurrentScreen = "cardList"
+			return m, m.listCard
 		}
 	case tea.KeyMsg:
 		switch msg.String() {

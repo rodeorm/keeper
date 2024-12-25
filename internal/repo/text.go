@@ -20,7 +20,7 @@ func (s *postgresStorage) AddTextByUser(ctx context.Context, t *core.Text, u *co
 	}
 	return nil
 }
-func (s *postgresStorage) SelectTextByUser(ctx context.Context, u *core.User) ([]core.Text, error) {
+func (s *postgresStorage) SelectAllTextsByUser(ctx context.Context, u *core.User) ([]core.Text, error) {
 	cyphTexts := make([]core.Data, 0)
 	ts := make([]core.Text, 0)
 	err := s.preparedStatements["SelectByte"].SelectContext(ctx, &cyphTexts, u.ID, core.TextType)

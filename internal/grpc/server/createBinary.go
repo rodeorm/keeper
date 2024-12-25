@@ -13,7 +13,6 @@ import (
 // CreateBinary создает бинарный файл
 func (g *grpcServer) CreateBinary(ctx context.Context, cr *proto.CreateBinaryRequest) (*proto.CreateBinaryResponse, error) {
 	//Сначала смотрим, кто к нам обращается по мете
-
 	usr, err := meta.GetUserIdentity(ctx, g.cfg.CryptKey)
 	if err != nil {
 		return nil, status.Error(codes.PermissionDenied, `отказано в доступе`)
@@ -27,8 +26,8 @@ func (g *grpcServer) CreateBinary(ctx context.Context, cr *proto.CreateBinaryReq
 
 	err = g.cfg.BinaryStorager.AddBinaryByUser(ctx, b, usr)
 	if err != nil {
-		return nil, status.Error(codes.Aborted, `не удалось создать`)
+		return nil, status.Error(codes.Aborted, `не удалось сохранить файл в БД`)
 	}
 
-	return &proto.CreateBinaryResponse{}, status.Error(codes.OK, `аутентификация и авторизация пройдены`)
+	return &proto.CreateBinaryResponse{}, status.Error(codes.OK, `файл сохранен в БД`)
 }

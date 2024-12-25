@@ -2,7 +2,6 @@ package server
 
 import (
 	"context"
-	"log"
 
 	"github.com/rodeorm/keeper/internal/grpc/meta"
 	"github.com/rodeorm/keeper/internal/grpc/proto"
@@ -18,22 +17,18 @@ func (g *grpcServer) ReadAllBinaries(ctx context.Context, cr *proto.ReadAllBinar
 		return nil, status.Error(codes.PermissionDenied, `отказано в доступе`)
 	}
 
-	log.Println("сервер получил запрос на получение бинарников пользователя", usr)
-
-	binaries, err := g.cfg.BinaryStorager.SelectBinaryByUser(ctx, usr)
+	binaries, err := g.cfg.BinaryStorager.SelectAllBinariesByUser(ctx, usr)
 	if err != nil {
 		return nil, status.Error(codes.DataLoss, `не удалось получить данные`)
 	}
 	resp := proto.ReadAllBinariesResponse{}
 	resp.Binaries = make([]*proto.Binary, 0)
 	for _, v := range binaries {
-
 		b := proto.Binary{Name: v.Name,
-			Meta:  v.Meta,
-			Id:    int32(v.ID),
-			Value: v.Value, // По уму сам бинарник не надо возвращать. Его лучше получить отдельно только по запросу, но времени у меня нет.
+			Meta: v.Meta,
+			Id:   int32(v.ID),
+			// Value: v.Value, // TODO: По уму сам бинарник не надо возвращать. Его лучше получить отдельно только по запросу
 		}
-		log.Println("Получили бинарники", v.Name, v.Meta)
 		resp.Binaries = append(resp.Binaries, &b)
 	}
 

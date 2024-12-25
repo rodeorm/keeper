@@ -2,6 +2,7 @@ package cli
 
 import (
 	"os"
+	"strconv"
 
 	"github.com/charmbracelet/bubbles/table"
 	tea "github.com/charmbracelet/bubbletea"
@@ -17,8 +18,8 @@ type BinaryList struct {
 func initBinaryList() BinaryList {
 	columns := []table.Column{
 		{Title: "Имя", Width: 50},
-		{Title: "Мета", Width: 1000},
-		{Title: "Сам бинарник", Width: 0}, // Бинарник не показываем, он нужен только для быстрого возврата. Большие файлы так лучше не хранить, конечно
+		{Title: "Мета", Width: 100},
+		{Title: "ID", Width: 5}, // Бинарник не показываем, он нужен только для быстрого возврата. Большие файлы так лучше не хранить, конечно
 	}
 
 	t := table.New(
@@ -60,15 +61,18 @@ func updateBinaryList(msg tea.Msg, m *Model) (tea.Model, tea.Cmd) {
 				m.BinaryList.table.Focus()
 			}
 		case "enter":
+			id, _ := strconv.Atoi(m.BinaryList.table.SelectedRow()[2])
 			bin := core.Binary{
-				Name:  m.BinaryList.table.SelectedRow()[0],
-				Value: []byte(m.BinaryList.table.SelectedRow()[2]),
+				Name: m.BinaryList.table.SelectedRow()[0],
+				ID:   id,
 			}
-			dir, _ := os.UserHomeDir()
-			svCmd := saveBinary(bin, dir)
+			if m.FilePath == "" {
+				m.FilePath, _ = os.UserHomeDir()
+			}
+			svCmd := m.saveBinary(bin, m.FilePath)
 
 			return m, tea.Batch(
-				tea.Printf("Файл %s будет сохранен в папку %s", bin.Name, dir),
+				tea.Printf("Файл %s (id %d) будет сохранен в папку %s", bin.Name, bin.ID, m.FilePath),
 				svCmd,
 			)
 		}
@@ -81,7 +85,7 @@ func updateBinaryList(msg tea.Msg, m *Model) (tea.Model, tea.Cmd) {
 	case binaryListMsg:
 		rows := make([]table.Row, 0)
 		for _, v := range msg.bins {
-			r := table.Row{v.Name, v.Meta, string(v.Value)}
+			r := table.Row{v.Name, v.Meta, strconv.Itoa(v.ID)}
 			rows = append(rows, r)
 		}
 

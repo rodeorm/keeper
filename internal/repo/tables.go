@@ -11,10 +11,10 @@ import (
 func (s *postgresStorage) createTables(ctx context.Context) error {
 	_, err := s.DB.ExecContext(ctx,
 
-		`	/*
-			DROP SCHEMA cmn CASCADE; --ВРЕМЕННО
-			DROP SCHEMA dbo CASCADE; --ВРЕМЕННО
-			*/
+		`	
+			--DROP SCHEMA cmn CASCADE; --ВРЕМЕННО
+			--DROP SCHEMA dbo CASCADE; --ВРЕМЕННО
+			
 			CREATE SCHEMA IF NOT EXISTS cmn;
 			CREATE SCHEMA IF NOT EXISTS dbo;
 			CREATE TABLE IF NOT EXISTS cmn.Users 
@@ -93,7 +93,9 @@ func (s *postgresStorage) createTables(ctx context.Context) error {
 	, UserID 		INT
 	, TypeID		INT
 	, ByteData 		BYTEA NOT NULL                   
-    , CreatedDate		TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
+    , CreatedDate	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
+	, Name          TEXT
+	, Meta			TEXT
 	, PRIMARY KEY (ID) 
 	, FOREIGN KEY (UserID) REFERENCES cmn.Users(ID) DEFERRABLE
 	, FOREIGN KEY (TypeID) REFERENCES dbo.DataTypes(ID) DEFERRABLE
@@ -115,13 +117,14 @@ func (s *postgresStorage) createTables(ctx context.Context) error {
 
 func (s *postgresStorage) insertRefs(ctx context.Context) error {
 	_, err := s.DB.ExecContext(ctx,
-		`	
+		`	/*
 			INSERT INTO dbo.DataTypes (ID, Name)
 			VALUES 
     		($1, 'Пара логин-пароль'),
     		($2, 'Бинарный файл'),
     		($3, 'Текст'),
     		($4, 'Кредитная карта');
+			*/
 		`, core.CoupleType, core.BinaryType, core.TextType, core.CardType)
 	if err != nil {
 		return err

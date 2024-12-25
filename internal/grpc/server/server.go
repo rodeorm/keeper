@@ -27,6 +27,7 @@ type grpcServer struct {
 
 // Start запускает grpc-сервер
 func Start(cfg *cfg.Server, wg *sync.WaitGroup, exit chan struct{}) error {
+	maxMessageSize := 40 * 1024 * 1024
 	grpcSrv := grpcServer{cfg: cfg}
 	listen, err := net.Listen("tcp", cfg.RunAddress)
 
@@ -35,7 +36,7 @@ func Start(cfg *cfg.Server, wg *sync.WaitGroup, exit chan struct{}) error {
 		return err
 	}
 
-	grpcSrv.srv = grpc.NewServer(grpc.UnaryInterceptor(interc.UnaryServerLogInterceptor))
+	grpcSrv.srv = grpc.NewServer(grpc.UnaryInterceptor(interc.UnaryServerLogInterceptor), grpc.MaxRecvMsgSize(maxMessageSize), grpc.MaxSendMsgSize(maxMessageSize))
 
 	proto.RegisterKeeperServiceServer(grpcSrv.srv, &grpcSrv)
 

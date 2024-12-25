@@ -6,7 +6,9 @@ import "time"
 type Data struct {
 	CreatedDate time.Time //Дата создания
 	ByteData    []byte    //Зашифрованные бинарные данные в БД
-	ID          int       //Идентификатор
-	UserID      int       //Идентификатор пользователя
-	TypeID      int       //Идентификатор типа
+	Name        string
+	Meta        string
+	ID          int //Идентификатор
+	UserID      int //Идентификатор пользователя
+	TypeID      int //Идентификатор типа
 }

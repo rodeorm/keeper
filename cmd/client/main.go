@@ -26,9 +26,15 @@ func main() {
 		os.Exit(1)
 		//	panic(err)
 	}
-
+	maxMessageSize := 40 * 1024 * 1024
 	// устанавливаем соединение с сервером
-	conn, err := grpc.NewClient(config.ServerAddress, grpc.WithTransportCredentials(insecure.NewCredentials()), grpc.WithDefaultCallOptions(grpc.UseCompressor(gzip.Name)))
+
+	conn, err := grpc.NewClient(config.ServerAddress,
+		grpc.WithTransportCredentials(insecure.NewCredentials()),
+		grpc.WithDefaultCallOptions(grpc.UseCompressor(gzip.Name)),
+		grpc.WithDefaultCallOptions(grpc.MaxCallRecvMsgSize(maxMessageSize)),
+		grpc.WithDefaultCallOptions(grpc.MaxCallSendMsgSize(maxMessageSize)),
+	)
 	if err != nil {
 		log.Println("Ошибка при попытке установить соединение с сервером")
 		os.Exit(1)
@@ -42,7 +48,7 @@ func main() {
 	}
 	defer conn.Close()
 
-	initModel := cli.InitialModel(grpc)
+	initModel := cli.InitialModel(grpc, config.FilePath)
 	p := tea.NewProgram(initModel) //, tea.WithAltScreen())
 	if _, err := p.Run(); err != nil {
 		log.Println("Ошибка при попытке запустить программу")

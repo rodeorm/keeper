@@ -91,6 +91,7 @@ func (m *Model) listBinary() tea.Msg {
 				Value: v.Value,
 				Name:  v.Name,
 				Meta:  v.Meta,
+				ID:    int(v.Id),
 			})
 	}
 
@@ -104,9 +105,14 @@ func (m *Model) addBinary() tea.Msg {
 	return msg
 }
 
-func saveBinary(bin core.Binary, dir string) tea.Cmd {
+func (m *Model) saveBinary(bin core.Binary, dir string) tea.Cmd {
 	return func() tea.Msg {
-		err := core.SaveBinaryToFile(bin, dir)
+		ctx := context.TODO()
+		err := client.ReadBinary(ctx, m.Token, &bin, m.sc)
+		if err != nil {
+			return saveBinaryMsg{err: err}
+		}
+		err = core.SaveBinaryToFile(bin, dir)
 		return saveBinaryMsg{err: err}
 	}
 }
