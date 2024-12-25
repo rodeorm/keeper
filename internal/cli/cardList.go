@@ -72,6 +72,7 @@ func updateCardList(msg tea.Msg, m *Model) (tea.Model, tea.Cmd) {
 			r := table.Row{fmt.Sprint(i), v.CardNumber, fmt.Sprint(v.ExpYear), fmt.Sprint(v.ExpMonth), v.OwnerName, v.Meta}
 			rows = append(rows, r)
 		}
+
 		m.CardList.table.SetRows(rows)
 		m.CardList.table.SetHeight(len(rows) + 2)
 		m.CardList.table.Focus()

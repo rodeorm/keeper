@@ -22,8 +22,10 @@ func (m Model) View() string {
 		s = viewCardCreate(&m)
 	case "cardList":
 		s = viewCardList(&m)
-	case "binaryCreate":
-		s = viewBinaryCreate(&m)
+	case "binaryPick":
+		s = viewBinaryPick(&m)
+	case "binaryAdd":
+		s = viewBinaryAdd(&m)
 	case "binaryList":
 		s = viewBinaryList(&m)
 	}

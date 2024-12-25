@@ -70,9 +70,10 @@ message Card {
 }
 
 message Binary {
-    bytes bytes = 1;
-    string meta = 2;
-    int32 id = 8;
+    bytes value = 1;
+    string name = 2;
+    string meta = 3;
+    int32 id = 4;
 }
 
 message Text {

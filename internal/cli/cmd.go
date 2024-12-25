@@ -57,7 +57,7 @@ func (m *Model) listCard() tea.Msg {
 		return msg
 	}
 
-	msg.cards = make([]core.Card, len(cds))
+	msg.cards = make([]core.Card, 0)
 
 	for _, v := range cds {
 		msg.cards = append(msg.cards,
@@ -73,11 +73,42 @@ func (m *Model) listCard() tea.Msg {
 	return msg
 }
 func (m *Model) listBinary() tea.Msg {
-	return nil
+	ctx := context.TODO()
+
+	bs, err := client.ReadAllBinaries(ctx, m.Token, m.sc)
+
+	msg := binaryListMsg{}
+	if err != nil {
+		msg.err = err
+		return msg
+	}
+
+	msg.bins = make([]core.Binary, 0)
+
+	for _, v := range bs {
+		msg.bins = append(msg.bins,
+			core.Binary{
+				Value: v.Value,
+				Name:  v.Name,
+				Meta:  v.Meta,
+			})
+	}
+
+	return msg
 }
 
-func (m *Model) createBinary() tea.Msg {
-	return nil
+func (m *Model) addBinary() tea.Msg {
+	ctx := context.TODO()
+	msg := binaryAddMsg{}
+	msg.err = client.CreateBinary(ctx, m.Token, *m.BinaryAdd.b, m.sc)
+	return msg
+}
+
+func saveBinary(bin core.Binary, dir string) tea.Cmd {
+	return func() tea.Msg {
+		err := core.SaveBinaryToFile(bin, dir)
+		return saveBinaryMsg{err: err}
+	}
 }
 
 /*
@@ -100,11 +131,7 @@ func (m *Model) listText() tea.Msg {
 }
 
 // CmdWithArg - на случай необходимости передавать параметры в cmd
-func CmdWithArg(tm []textinput.Model) tea.Cmd {
-	return func() tea.Msg {
-		return SomeMsg{}
-	}
-}
 
-type SomeMsg struct{}
+
+
 */

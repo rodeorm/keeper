@@ -1,12 +1,12 @@
 package cli
 
 import (
-	"fmt"
+	"os"
 
 	"github.com/charmbracelet/bubbles/table"
-	"github.com/charmbracelet/bubbles/textinput"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
+	"github.com/rodeorm/keeper/internal/core"
 )
 
 // BinaryListScreen данные для отображения карт пользователя
@@ -16,8 +16,9 @@ type BinaryList struct {
 
 func initBinaryList() BinaryList {
 	columns := []table.Column{
-		{Title: "№", Width: 3},
-		{Title: "Мета", Width: 50},
+		{Title: "Имя", Width: 50},
+		{Title: "Мета", Width: 1000},
+		{Title: "Сам бинарник", Width: 0}, // Бинарник не показываем, он нужен только для быстрого возврата. Большие файлы так лучше не хранить, конечно
 	}
 
 	t := table.New(
@@ -49,9 +50,9 @@ func updateBinaryList(msg tea.Msg, m *Model) (tea.Model, tea.Cmd) {
 		case "r":
 			return m, m.listBinary
 		case "c":
-			m.BinaryCreate = initBinaryCreate()
-			m.CurrentScreen = "binaryCreate"
-			return m, tea.Batch(m.filepicker.Init(), textinput.Blink)
+			m.BinaryPick = initBinaryPick()
+			m.CurrentScreen = "binaryPick"
+			return m, m.BinaryPick.filepicker.Init()
 		case "ctrl+z":
 			if m.BinaryList.table.Focused() {
 				m.BinaryList.table.Blur()
@@ -59,16 +60,31 @@ func updateBinaryList(msg tea.Msg, m *Model) (tea.Model, tea.Cmd) {
 				m.BinaryList.table.Focus()
 			}
 		case "enter":
+			bin := core.Binary{
+				Name:  m.BinaryList.table.SelectedRow()[0],
+				Value: []byte(m.BinaryList.table.SelectedRow()[2]),
+			}
+			dir, _ := os.UserHomeDir()
+			svCmd := saveBinary(bin, dir)
+
 			return m, tea.Batch(
-				tea.Printf("Выбран файл номер %s!", m.BinaryList.table.SelectedRow()[1]),
+				tea.Printf("Файл %s будет сохранен в папку %s", bin.Name, dir),
+				svCmd,
 			)
+		}
+	case saveBinaryMsg:
+		if msg.err != nil {
+			return m, tea.Printf("Ошибка при сохранении %s", msg.err.Error())
+		} else {
+			return m, tea.Printf("Удачно сохранили")
 		}
 	case binaryListMsg:
 		rows := make([]table.Row, 0)
-		for i, v := range msg.bins {
-			r := table.Row{fmt.Sprint(i), v.Meta}
+		for _, v := range msg.bins {
+			r := table.Row{v.Name, v.Meta, string(v.Value)}
 			rows = append(rows, r)
 		}
+
 		m.BinaryList.table.SetRows(rows)
 		m.BinaryList.table.SetHeight(len(rows) + 2)
 		m.BinaryList.table.Focus()

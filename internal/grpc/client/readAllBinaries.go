@@ -13,16 +13,15 @@ import (
 	"github.com/rodeorm/keeper/internal/grpc/proto"
 )
 
-func ReadAllCards(ctxBg context.Context, token string, c proto.KeeperServiceClient) ([]*proto.Card, error) {
+func ReadAllBinaries(ctxBg context.Context, token string, c proto.KeeperServiceClient) ([]*proto.Binary, error) {
 	var header, trailer metadata.MD
 	ctx, cancel := context.WithTimeout(ctxBg, 10*time.Second)
 	defer cancel()
 	ctx = meta.AddTokenToCtx(ctx, token)
-	resp, err := c.ReadAllCards(ctx, &proto.ReadAllCardsRequest{}, grpc.Header(&header), grpc.Trailer(&trailer))
-
+	resp, err := c.ReadAllBinaries(ctx, &proto.ReadAllBinariesRequest{}, grpc.Header(&header), grpc.Trailer(&trailer))
 	if status.Code(err) != codes.OK {
 		return nil, err
 	}
 
-	return resp.Cards, nil
+	return resp.Binaries, nil
 }

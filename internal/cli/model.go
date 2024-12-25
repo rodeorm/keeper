@@ -28,7 +28,8 @@ type Model struct {
 	Main
 	CardCreate
 	CardList
-	BinaryCreate
+	BinaryPick
+	BinaryAdd
 	BinaryList
 
 	sc proto.KeeperServiceClient
@@ -50,10 +51,14 @@ func InitialModel(sc proto.KeeperServiceClient) Model {
 	m.Reg = initReg()
 	m.Verify = initVerify()
 	m.Main = initMain()
+	// Данные кредитных карт
 	m.CardCreate = initCardCreate()
 	m.CardList = initCardList()
-	m.BinaryList = initBinaryList()
-	m.BinaryCreate = initBinaryCreate()
+	// Данные бинарных файлов
+	m.BinaryList = initBinaryList() // Общий список
+	m.BinaryPick = initBinaryPick() // Создание (выбор файла)
+	m.BinaryAdd = initBinaryAdd()   // Создание (сохранение файла с новым именем и метой)
+
 	m.sc = sc
 
 	return m

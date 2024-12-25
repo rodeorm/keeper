@@ -19,25 +19,27 @@ import (
 // Аналогично - не будет локально пароля для шифрования данных. Вместо этого - шифрование на сервере общее
 // Валидация данных осуществляется на клиенте
 func main() {
+
 	config, err := cfg.GetClientConfigFromFile()
 	if err != nil {
 		log.Println("Ошибка при попытке получить конфигурационный файл")
 		os.Exit(1)
 		//	panic(err)
 	}
+
 	// устанавливаем соединение с сервером
 	conn, err := grpc.NewClient(config.ServerAddress, grpc.WithTransportCredentials(insecure.NewCredentials()), grpc.WithDefaultCallOptions(grpc.UseCompressor(gzip.Name)))
 	if err != nil {
 		log.Println("Ошибка при попытке установить соединение с сервером")
 		os.Exit(1)
 	}
+
 	grpc := proto.NewKeeperServiceClient(conn)
 	err = client.Ping(grpc)
 	if err != nil {
 		log.Println("Ошибка при проверке соединения с сервером")
 		os.Exit(1)
 	}
-
 	defer conn.Close()
 
 	initModel := cli.InitialModel(grpc)

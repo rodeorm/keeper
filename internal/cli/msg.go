@@ -2,7 +2,11 @@ package cli
 
 import "github.com/rodeorm/keeper/internal/core"
 
-type binaryCreateMsg struct {
+type binaryAddMsg struct {
+	err error
+}
+
+type saveBinaryMsg struct {
 	err error
 }
 

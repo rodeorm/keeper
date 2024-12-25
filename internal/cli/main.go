@@ -45,7 +45,7 @@ func updateMain(msg tea.Msg, m *Model) (tea.Model, tea.Cmd) {
 				return m, textinput.Blink
 			case 3:
 				m.CurrentScreen = "binaryList"
-				return m, textinput.Blink
+				return m, tea.Batch(textinput.Blink, m.listBinary)
 			}
 		}
 	}

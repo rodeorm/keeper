@@ -16,11 +16,16 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		}
 	}
 
-	// Всегда перехватывем esc (обнуляем приложение)
+	// Всегда перехватывем esc (возвращаемя в основные меню)
 	if msg, ok := msg.(tea.KeyMsg); ok {
 		k := msg.String()
 		if k == "esc" {
-			m = InitialModel(m.sc)
+			if m.Authenticated {
+				m.CurrentScreen = "main"
+			} else {
+				m.CurrentScreen = "logo"
+			}
+
 			return m, nil
 		}
 	}
@@ -40,8 +45,10 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		return updateCardCreate(msg, &m)
 	case "cardList":
 		return updateCardList(msg, &m)
-	case "binaryCreate":
-		return updateBinaryCreate(msg, &m)
+	case "binaryPick":
+		return updateBinaryPick(msg, &m)
+	case "binaryAdd":
+		return updateBinaryAdd(msg, &m)
 	case "binaryList":
 		return updateBinaryList(msg, &m)
 	default:

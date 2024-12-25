@@ -2,7 +2,6 @@ package server
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/rodeorm/keeper/internal/core"
 	"github.com/rodeorm/keeper/internal/grpc/meta"
@@ -24,8 +23,6 @@ func (g *grpcServer) CreateCard(ctx context.Context, cr *proto.CreateCardRequest
 		ExpYear:   int(cr.Card.ExpYear),
 		Meta:      cr.Card.Meta}
 
-	fmt.Println("HERE WE ARE", usr)
-	fmt.Println("HERE WE ARE", card)
 	err = g.cfg.CardStorager.AddCardByUser(ctx, card, usr)
 	if err != nil {
 		return nil, status.Error(codes.Aborted, `не удалось создать`)
