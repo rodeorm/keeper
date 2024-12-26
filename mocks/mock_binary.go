@@ -5,6 +5,7 @@
 package mocks
 
 import (
+	context "context"
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
@@ -35,58 +36,72 @@ func (m *MockBinaryStorager) EXPECT() *MockBinaryStoragerMockRecorder {
 }
 
 // AddBinaryByUser mocks base method.
-func (m *MockBinaryStorager) AddBinaryByUser(arg0 *core.Binary) error {
+func (m *MockBinaryStorager) AddBinaryByUser(arg0 context.Context, arg1 *core.Binary, arg2 *core.User) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "AddBinaryByUser", arg0)
+	ret := m.ctrl.Call(m, "AddBinaryByUser", arg0, arg1, arg2)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // AddBinaryByUser indicates an expected call of AddBinaryByUser.
-func (mr *MockBinaryStoragerMockRecorder) AddBinaryByUser(arg0 interface{}) *gomock.Call {
+func (mr *MockBinaryStoragerMockRecorder) AddBinaryByUser(arg0, arg1, arg2 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddBinaryByUser", reflect.TypeOf((*MockBinaryStorager)(nil).AddBinaryByUser), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddBinaryByUser", reflect.TypeOf((*MockBinaryStorager)(nil).AddBinaryByUser), arg0, arg1, arg2)
 }
 
 // DeleteBinaryByUser mocks base method.
-func (m *MockBinaryStorager) DeleteBinaryByUser(arg0 *core.Binary, arg1 *core.User) error {
+func (m *MockBinaryStorager) DeleteBinaryByUser(arg0 context.Context, arg1 *core.Binary, arg2 *core.User) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DeleteBinaryByUser", arg0, arg1)
+	ret := m.ctrl.Call(m, "DeleteBinaryByUser", arg0, arg1, arg2)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // DeleteBinaryByUser indicates an expected call of DeleteBinaryByUser.
-func (mr *MockBinaryStoragerMockRecorder) DeleteBinaryByUser(arg0, arg1 interface{}) *gomock.Call {
+func (mr *MockBinaryStoragerMockRecorder) DeleteBinaryByUser(arg0, arg1, arg2 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteBinaryByUser", reflect.TypeOf((*MockBinaryStorager)(nil).DeleteBinaryByUser), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteBinaryByUser", reflect.TypeOf((*MockBinaryStorager)(nil).DeleteBinaryByUser), arg0, arg1, arg2)
 }
 
-// SelectBinaryByUser mocks base method.
-func (m *MockBinaryStorager) SelectBinaryByUser(arg0 *core.User) ([]core.Binary, error) {
+// SelectAllBinariesByUser mocks base method.
+func (m *MockBinaryStorager) SelectAllBinariesByUser(arg0 context.Context, arg1 *core.User) ([]core.Binary, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SelectBinaryByUser", arg0)
+	ret := m.ctrl.Call(m, "SelectAllBinariesByUser", arg0, arg1)
 	ret0, _ := ret[0].([]core.Binary)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// SelectBinaryByUser indicates an expected call of SelectBinaryByUser.
-func (mr *MockBinaryStoragerMockRecorder) SelectBinaryByUser(arg0 interface{}) *gomock.Call {
+// SelectAllBinariesByUser indicates an expected call of SelectAllBinariesByUser.
+func (mr *MockBinaryStoragerMockRecorder) SelectAllBinariesByUser(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SelectBinaryByUser", reflect.TypeOf((*MockBinaryStorager)(nil).SelectBinaryByUser), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SelectAllBinariesByUser", reflect.TypeOf((*MockBinaryStorager)(nil).SelectAllBinariesByUser), arg0, arg1)
+}
+
+// SelectBinaryByUser mocks base method.
+func (m *MockBinaryStorager) SelectBinaryByUser(arg0 context.Context, arg1 *core.Binary, arg2 *core.User) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SelectBinaryByUser", arg0, arg1, arg2)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// SelectBinaryByUser indicates an expected call of SelectBinaryByUser.
+func (mr *MockBinaryStoragerMockRecorder) SelectBinaryByUser(arg0, arg1, arg2 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SelectBinaryByUser", reflect.TypeOf((*MockBinaryStorager)(nil).SelectBinaryByUser), arg0, arg1, arg2)
 }
 
 // UpdateBinaryByUser mocks base method.
-func (m *MockBinaryStorager) UpdateBinaryByUser(arg0 *core.Binary, arg1 *core.User) error {
+func (m *MockBinaryStorager) UpdateBinaryByUser(arg0 context.Context, arg1 *core.Binary, arg2 *core.User) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "UpdateBinaryByUser", arg0, arg1)
+	ret := m.ctrl.Call(m, "UpdateBinaryByUser", arg0, arg1, arg2)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // UpdateBinaryByUser indicates an expected call of UpdateBinaryByUser.
-func (mr *MockBinaryStoragerMockRecorder) UpdateBinaryByUser(arg0, arg1 interface{}) *gomock.Call {
+func (mr *MockBinaryStoragerMockRecorder) UpdateBinaryByUser(arg0, arg1, arg2 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateBinaryByUser", reflect.TypeOf((*MockBinaryStorager)(nil).UpdateBinaryByUser), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateBinaryByUser", reflect.TypeOf((*MockBinaryStorager)(nil).UpdateBinaryByUser), arg0, arg1, arg2)
 }

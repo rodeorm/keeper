@@ -5,6 +5,7 @@
 package mocks
 
 import (
+	context "context"
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
@@ -35,58 +36,58 @@ func (m *MockTextStorager) EXPECT() *MockTextStoragerMockRecorder {
 }
 
 // AddTextByUser mocks base method.
-func (m *MockTextStorager) AddTextByUser(arg0 *core.Text) error {
+func (m *MockTextStorager) AddTextByUser(arg0 context.Context, arg1 *core.Text, arg2 *core.User) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "AddTextByUser", arg0)
+	ret := m.ctrl.Call(m, "AddTextByUser", arg0, arg1, arg2)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // AddTextByUser indicates an expected call of AddTextByUser.
-func (mr *MockTextStoragerMockRecorder) AddTextByUser(arg0 interface{}) *gomock.Call {
+func (mr *MockTextStoragerMockRecorder) AddTextByUser(arg0, arg1, arg2 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddTextByUser", reflect.TypeOf((*MockTextStorager)(nil).AddTextByUser), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddTextByUser", reflect.TypeOf((*MockTextStorager)(nil).AddTextByUser), arg0, arg1, arg2)
 }
 
 // DeleteTextByUser mocks base method.
-func (m *MockTextStorager) DeleteTextByUser(arg0 *core.Text, arg1 *core.User) error {
+func (m *MockTextStorager) DeleteTextByUser(arg0 context.Context, arg1 *core.Text, arg2 *core.User) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DeleteTextByUser", arg0, arg1)
+	ret := m.ctrl.Call(m, "DeleteTextByUser", arg0, arg1, arg2)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // DeleteTextByUser indicates an expected call of DeleteTextByUser.
-func (mr *MockTextStoragerMockRecorder) DeleteTextByUser(arg0, arg1 interface{}) *gomock.Call {
+func (mr *MockTextStoragerMockRecorder) DeleteTextByUser(arg0, arg1, arg2 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteTextByUser", reflect.TypeOf((*MockTextStorager)(nil).DeleteTextByUser), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteTextByUser", reflect.TypeOf((*MockTextStorager)(nil).DeleteTextByUser), arg0, arg1, arg2)
 }
 
-// SelectTextByUser mocks base method.
-func (m *MockTextStorager) SelectTextByUser(arg0 *core.User) ([]core.Text, error) {
+// SelectAllTextsByUser mocks base method.
+func (m *MockTextStorager) SelectAllTextsByUser(arg0 context.Context, arg1 *core.User) ([]core.Text, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SelectTextByUser", arg0)
+	ret := m.ctrl.Call(m, "SelectAllTextsByUser", arg0, arg1)
 	ret0, _ := ret[0].([]core.Text)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// SelectTextByUser indicates an expected call of SelectTextByUser.
-func (mr *MockTextStoragerMockRecorder) SelectTextByUser(arg0 interface{}) *gomock.Call {
+// SelectAllTextsByUser indicates an expected call of SelectAllTextsByUser.
+func (mr *MockTextStoragerMockRecorder) SelectAllTextsByUser(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SelectTextByUser", reflect.TypeOf((*MockTextStorager)(nil).SelectTextByUser), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SelectAllTextsByUser", reflect.TypeOf((*MockTextStorager)(nil).SelectAllTextsByUser), arg0, arg1)
 }
 
 // UpdateTextByUser mocks base method.
-func (m *MockTextStorager) UpdateTextByUser(arg0 *core.Text, arg1 *core.User) error {
+func (m *MockTextStorager) UpdateTextByUser(arg0 context.Context, arg1 *core.Text, arg2 *core.User) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "UpdateTextByUser", arg0, arg1)
+	ret := m.ctrl.Call(m, "UpdateTextByUser", arg0, arg1, arg2)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // UpdateTextByUser indicates an expected call of UpdateTextByUser.
-func (mr *MockTextStoragerMockRecorder) UpdateTextByUser(arg0, arg1 interface{}) *gomock.Call {
+func (mr *MockTextStoragerMockRecorder) UpdateTextByUser(arg0, arg1, arg2 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateTextByUser", reflect.TypeOf((*MockTextStorager)(nil).UpdateTextByUser), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateTextByUser", reflect.TypeOf((*MockTextStorager)(nil).UpdateTextByUser), arg0, arg1, arg2)
 }
