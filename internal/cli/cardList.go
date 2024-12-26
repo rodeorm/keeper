@@ -1,16 +1,50 @@
 package cli
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/charmbracelet/bubbles/table"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
+	"github.com/rodeorm/keeper/internal/core"
+	"github.com/rodeorm/keeper/internal/grpc/client"
 )
 
-// CardListScreen данные для отображения карт пользователя
+// CardList данные для отображения карт пользователя
 type CardList struct {
 	table table.Model
+}
+
+type cardListMsg struct {
+	cards []core.Card
+	err   error
+}
+
+func (m *Model) listCard() tea.Msg {
+	ctx := context.TODO()
+
+	cds, err := client.ReadAllCards(ctx, m.Token, m.sc)
+	msg := cardListMsg{}
+	if err != nil {
+		msg.err = err
+		return msg
+	}
+
+	msg.cards = make([]core.Card, 0)
+
+	for _, v := range cds {
+		msg.cards = append(msg.cards,
+			core.Card{CardNumber: v.CardNumber,
+				OwnerName: v.OwnerName,
+				ExpMonth:  int(v.ExpMonth),
+				ExpYear:   int(v.ExpYear),
+				Meta:      v.Meta,
+				ID:        int(v.Id),
+				CVC:       int(v.CVC)})
+	}
+
+	return msg
 }
 
 func initCardList() CardList {

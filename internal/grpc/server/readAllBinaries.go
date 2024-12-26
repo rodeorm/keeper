@@ -27,7 +27,7 @@ func (g *grpcServer) ReadAllBinaries(ctx context.Context, cr *proto.ReadAllBinar
 		b := proto.Binary{Name: v.Name,
 			Meta: v.Meta,
 			Id:   int32(v.ID),
-			// Value: v.Value, // TODO: По уму сам бинарник не надо возвращать. Его лучше получить отдельно только по запросу
+			// Value: v.Value, // Cам бинарник не надо возвращать. Его лучше получить отдельно только по запросу
 		}
 		resp.Binaries = append(resp.Binaries, &b)
 	}

@@ -30,5 +30,5 @@ func (g *grpcServer) CreateCard(ctx context.Context, cr *proto.CreateCardRequest
 
 	resp := proto.CreateCardResponse{}
 
-	return &resp, status.Error(codes.OK, `аутентификация и авторизация пройдены`)
+	return &resp, status.Error(codes.OK, `удалось сохранить данные карты в БД`)
 }
