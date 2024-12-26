@@ -2,7 +2,6 @@ package server
 
 import (
 	"context"
-	"log"
 
 	"github.com/rodeorm/keeper/internal/grpc/meta"
 	"github.com/rodeorm/keeper/internal/grpc/proto"
@@ -36,8 +35,6 @@ func (g *grpcServer) ReadAllCards(ctx context.Context, cr *proto.ReadAllCardsReq
 		}
 		resp.Cards = append(resp.Cards, &c)
 	}
-
-	log.Printf("вернули пользователю %s количество карт %d", usr.Login, len(resp.Cards))
 
 	return &resp, status.Error(codes.OK, `аутентификация и авторизация пройдены`)
 }

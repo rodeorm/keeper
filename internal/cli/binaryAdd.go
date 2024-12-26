@@ -1,6 +1,7 @@
 package cli
 
 import (
+	"context"
 	"fmt"
 	"strings"
 
@@ -8,6 +9,7 @@ import (
 	"github.com/charmbracelet/bubbles/textinput"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/rodeorm/keeper/internal/core"
+	"github.com/rodeorm/keeper/internal/grpc/client"
 )
 
 // BinaryAdd
@@ -19,6 +21,33 @@ type BinaryAdd struct {
 	err error
 
 	b *core.Binary
+}
+
+type binaryAddMsg struct {
+	err error
+}
+
+type saveBinaryMsg struct {
+	err error
+}
+
+func (m *Model) addBinary() tea.Msg {
+	ctx := context.TODO()
+	msg := binaryAddMsg{}
+	msg.err = client.CreateBinary(ctx, m.Token, *m.BinaryAdd.b, m.sc)
+	return msg
+}
+
+func (m *Model) saveBinary(bin core.Binary, dir string) tea.Cmd {
+	return func() tea.Msg {
+		ctx := context.TODO()
+		err := client.ReadBinary(ctx, m.Token, &bin, m.sc)
+		if err != nil {
+			return saveBinaryMsg{err: err}
+		}
+		err = core.SaveBinaryToFile(bin, dir)
+		return saveBinaryMsg{err: err}
+	}
 }
 
 func (m *Model) updateBinaryAddInputs(msg tea.Msg) tea.Cmd {

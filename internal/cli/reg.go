@@ -1,6 +1,7 @@
 package cli
 
 import (
+	"context"
 	"fmt"
 	"strings"
 
@@ -8,6 +9,7 @@ import (
 	"github.com/charmbracelet/bubbles/textinput"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/rodeorm/keeper/internal/core"
+	"github.com/rodeorm/keeper/internal/grpc/client"
 )
 
 // Reg данные регистрации
@@ -17,6 +19,25 @@ type Reg struct {
 	CursorMode cursor.Mode
 
 	err string
+}
+
+type regMsg struct {
+	reg bool  // Да - Был зарегистрирован; Нет - не был зарегистрирован
+	err error // Причина, по которой мог не зарегистрироваться
+}
+
+// regUser - команда на регистрацию пользователя
+func (m *Model) regUser() tea.Msg {
+	ctx := context.TODO()
+	err := client.RegUser(&m.User, ctx, m.sc)
+	r := regMsg{}
+	if err != nil {
+		r.err = err
+		r.reg = false
+		return r
+	}
+	r.reg = true
+	return r
 }
 
 func (m *Model) updateRegInputs(msg tea.Msg) tea.Cmd {

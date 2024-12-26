@@ -1,6 +1,7 @@
 package cli
 
 import (
+	"context"
 	"fmt"
 	"strconv"
 	"strings"
@@ -9,6 +10,7 @@ import (
 	"github.com/charmbracelet/bubbles/textinput"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/rodeorm/keeper/internal/core"
+	"github.com/rodeorm/keeper/internal/grpc/client"
 )
 
 // CardCreate данные карты
@@ -18,6 +20,17 @@ type CardCreate struct {
 	CursorMode cursor.Mode
 	crd        core.Card
 	err        string
+}
+
+type cardCreateMsg struct {
+	err error
+}
+
+func (m *Model) createCard() tea.Msg {
+	ctx := context.TODO()
+	msg := cardCreateMsg{}
+	msg.err = client.CreateCard(ctx, m.Token, m.CardCreate.crd, m.sc)
+	return msg
 }
 
 func (m *Model) updateCardCreateInputs(msg tea.Msg) tea.Cmd {

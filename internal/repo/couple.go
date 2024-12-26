@@ -3,6 +3,7 @@ package repo
 import (
 	"context"
 	"encoding/json"
+	"log"
 	"time"
 
 	"github.com/rodeorm/keeper/internal/core"
@@ -23,7 +24,7 @@ func (s *postgresStorage) AddCoupleByUser(ctx context.Context, c *core.Couple, u
 func (s *postgresStorage) SelectAllCouplesByUser(ctx context.Context, u *core.User) ([]core.Couple, error) {
 	cyphCouples := make([]core.Data, 0)
 	cs := make([]core.Couple, 0)
-	err := s.preparedStatements["SelectByte"].SelectContext(ctx, &cyphCouples, u.ID, core.CoupleType)
+	err := s.preparedStatements["SelectAllBytes"].SelectContext(ctx, &cyphCouples, u.ID, core.CoupleType)
 	if err != nil {
 		return nil, err
 	}
@@ -34,6 +35,8 @@ func (s *postgresStorage) SelectAllCouplesByUser(ctx context.Context, u *core.Us
 		json.Unmarshal(decData, &c)
 		cs = append(cs, c)
 	}
+
+	log.Println("SelectAllCouplesByUser", cs)
 
 	return cs, nil
 }

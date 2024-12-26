@@ -45,6 +45,14 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		return updateCardCreate(msg, &m)
 	case "cardList":
 		return updateCardList(msg, &m)
+	case "coupleCreate":
+		return updateCoupleCreate(msg, &m)
+	case "coupleList":
+		return updateCoupleList(msg, &m)
+	case "textCreate":
+		return updateTextCreate(msg, &m)
+	case "textList":
+		return updateTextList(msg, &m)
 	case "binaryPick":
 		return updateBinaryPick(msg, &m)
 	case "binaryAdd":

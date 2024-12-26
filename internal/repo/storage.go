@@ -48,9 +48,11 @@ func GetPostgresStorage(connectionString, cryptKey string) (*postgresStorage, er
 				return
 			}
 			if dbErr = ps.insertRefs(ctx); dbErr != nil {
-				logger.Log.Error("GetPostgresStorage",
-					zap.String("ошибка при первоначальном заполнении таблиц", dbErr.Error()),
-				)
+				/*	Ничего страшного в этой ошибке нет. Заполняется только при первом запуске сервера
+					logger.Log.Error("GetPostgresStorage",
+						zap.String("ошибка при первоначальном заполнении таблиц", dbErr.Error()),
+					)
+				*/
 			}
 			dbErr = ps.prepareStatements()
 			if dbErr != nil {

@@ -1,3 +1,6 @@
+//go:build !testing
+// +build !testing
+
 package main
 
 import (
@@ -11,6 +14,7 @@ func init() {
 	arch := runtime.GOARCH
 	version := runtime.Version()
 	appVersion := "beta 1.0"
+
 	// Выводим информацию в командную строку
 	fmt.Printf("Операционная система: %s\n", os)
 	fmt.Printf("Архитектура: %s\n", arch)

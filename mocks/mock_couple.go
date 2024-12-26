@@ -5,6 +5,7 @@
 package mocks
 
 import (
+	context "context"
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
@@ -35,58 +36,58 @@ func (m *MockCoupleStorager) EXPECT() *MockCoupleStoragerMockRecorder {
 }
 
 // AddCoupleByUser mocks base method.
-func (m *MockCoupleStorager) AddCoupleByUser(arg0 *core.Couple) error {
+func (m *MockCoupleStorager) AddCoupleByUser(arg0 context.Context, arg1 *core.Couple, arg2 *core.User) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "AddCoupleByUser", arg0)
+	ret := m.ctrl.Call(m, "AddCoupleByUser", arg0, arg1, arg2)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // AddCoupleByUser indicates an expected call of AddCoupleByUser.
-func (mr *MockCoupleStoragerMockRecorder) AddCoupleByUser(arg0 interface{}) *gomock.Call {
+func (mr *MockCoupleStoragerMockRecorder) AddCoupleByUser(arg0, arg1, arg2 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddCoupleByUser", reflect.TypeOf((*MockCoupleStorager)(nil).AddCoupleByUser), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddCoupleByUser", reflect.TypeOf((*MockCoupleStorager)(nil).AddCoupleByUser), arg0, arg1, arg2)
 }
 
 // DeleteCoupleByUser mocks base method.
-func (m *MockCoupleStorager) DeleteCoupleByUser(arg0 *core.Couple, arg1 *core.User) error {
+func (m *MockCoupleStorager) DeleteCoupleByUser(arg0 context.Context, arg1 *core.Couple, arg2 *core.User) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DeleteCoupleByUser", arg0, arg1)
+	ret := m.ctrl.Call(m, "DeleteCoupleByUser", arg0, arg1, arg2)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // DeleteCoupleByUser indicates an expected call of DeleteCoupleByUser.
-func (mr *MockCoupleStoragerMockRecorder) DeleteCoupleByUser(arg0, arg1 interface{}) *gomock.Call {
+func (mr *MockCoupleStoragerMockRecorder) DeleteCoupleByUser(arg0, arg1, arg2 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteCoupleByUser", reflect.TypeOf((*MockCoupleStorager)(nil).DeleteCoupleByUser), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteCoupleByUser", reflect.TypeOf((*MockCoupleStorager)(nil).DeleteCoupleByUser), arg0, arg1, arg2)
 }
 
-// SelectCoupleByUser mocks base method.
-func (m *MockCoupleStorager) SelectCoupleByUser(arg0 *core.User) ([]core.Couple, error) {
+// SelectAllCouplesByUser mocks base method.
+func (m *MockCoupleStorager) SelectAllCouplesByUser(arg0 context.Context, arg1 *core.User) ([]core.Couple, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SelectCoupleByUser", arg0)
+	ret := m.ctrl.Call(m, "SelectAllCouplesByUser", arg0, arg1)
 	ret0, _ := ret[0].([]core.Couple)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// SelectCoupleByUser indicates an expected call of SelectCoupleByUser.
-func (mr *MockCoupleStoragerMockRecorder) SelectCoupleByUser(arg0 interface{}) *gomock.Call {
+// SelectAllCouplesByUser indicates an expected call of SelectAllCouplesByUser.
+func (mr *MockCoupleStoragerMockRecorder) SelectAllCouplesByUser(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SelectCoupleByUser", reflect.TypeOf((*MockCoupleStorager)(nil).SelectCoupleByUser), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SelectAllCouplesByUser", reflect.TypeOf((*MockCoupleStorager)(nil).SelectAllCouplesByUser), arg0, arg1)
 }
 
 // UpdateCoupleByUser mocks base method.
-func (m *MockCoupleStorager) UpdateCoupleByUser(arg0 *core.Couple, arg1 *core.User) error {
+func (m *MockCoupleStorager) UpdateCoupleByUser(arg0 context.Context, arg1 *core.Couple, arg2 *core.User) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "UpdateCoupleByUser", arg0, arg1)
+	ret := m.ctrl.Call(m, "UpdateCoupleByUser", arg0, arg1, arg2)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // UpdateCoupleByUser indicates an expected call of UpdateCoupleByUser.
-func (mr *MockCoupleStoragerMockRecorder) UpdateCoupleByUser(arg0, arg1 interface{}) *gomock.Call {
+func (mr *MockCoupleStoragerMockRecorder) UpdateCoupleByUser(arg0, arg1, arg2 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateCoupleByUser", reflect.TypeOf((*MockCoupleStorager)(nil).UpdateCoupleByUser), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateCoupleByUser", reflect.TypeOf((*MockCoupleStorager)(nil).UpdateCoupleByUser), arg0, arg1, arg2)
 }

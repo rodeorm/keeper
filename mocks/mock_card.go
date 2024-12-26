@@ -5,6 +5,7 @@
 package mocks
 
 import (
+	context "context"
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
@@ -35,58 +36,58 @@ func (m *MockCardStorager) EXPECT() *MockCardStoragerMockRecorder {
 }
 
 // AddCardByUser mocks base method.
-func (m *MockCardStorager) AddCardByUser(arg0 *core.Card) error {
+func (m *MockCardStorager) AddCardByUser(arg0 context.Context, arg1 *core.Card, arg2 *core.User) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "AddCardByUser", arg0)
+	ret := m.ctrl.Call(m, "AddCardByUser", arg0, arg1, arg2)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // AddCardByUser indicates an expected call of AddCardByUser.
-func (mr *MockCardStoragerMockRecorder) AddCardByUser(arg0 interface{}) *gomock.Call {
+func (mr *MockCardStoragerMockRecorder) AddCardByUser(arg0, arg1, arg2 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddCardByUser", reflect.TypeOf((*MockCardStorager)(nil).AddCardByUser), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddCardByUser", reflect.TypeOf((*MockCardStorager)(nil).AddCardByUser), arg0, arg1, arg2)
 }
 
 // DeleteCardByUser mocks base method.
-func (m *MockCardStorager) DeleteCardByUser(arg0 *core.Card, arg1 *core.User) error {
+func (m *MockCardStorager) DeleteCardByUser(arg0 context.Context, arg1 *core.Card, arg2 *core.User) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DeleteCardByUser", arg0, arg1)
+	ret := m.ctrl.Call(m, "DeleteCardByUser", arg0, arg1, arg2)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // DeleteCardByUser indicates an expected call of DeleteCardByUser.
-func (mr *MockCardStoragerMockRecorder) DeleteCardByUser(arg0, arg1 interface{}) *gomock.Call {
+func (mr *MockCardStoragerMockRecorder) DeleteCardByUser(arg0, arg1, arg2 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteCardByUser", reflect.TypeOf((*MockCardStorager)(nil).DeleteCardByUser), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteCardByUser", reflect.TypeOf((*MockCardStorager)(nil).DeleteCardByUser), arg0, arg1, arg2)
 }
 
-// SelectCardByUser mocks base method.
-func (m *MockCardStorager) SelectCardByUser(arg0 *core.User) ([]core.Card, error) {
+// SelectAllCardsByUser mocks base method.
+func (m *MockCardStorager) SelectAllCardsByUser(arg0 context.Context, arg1 *core.User) ([]core.Card, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SelectCardByUser", arg0)
+	ret := m.ctrl.Call(m, "SelectAllCardsByUser", arg0, arg1)
 	ret0, _ := ret[0].([]core.Card)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// SelectCardByUser indicates an expected call of SelectCardByUser.
-func (mr *MockCardStoragerMockRecorder) SelectCardByUser(arg0 interface{}) *gomock.Call {
+// SelectAllCardsByUser indicates an expected call of SelectAllCardsByUser.
+func (mr *MockCardStoragerMockRecorder) SelectAllCardsByUser(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SelectCardByUser", reflect.TypeOf((*MockCardStorager)(nil).SelectCardByUser), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SelectAllCardsByUser", reflect.TypeOf((*MockCardStorager)(nil).SelectAllCardsByUser), arg0, arg1)
 }
 
 // UpdateCardByUser mocks base method.
-func (m *MockCardStorager) UpdateCardByUser(arg0 *core.Card, arg1 *core.User) error {
+func (m *MockCardStorager) UpdateCardByUser(arg0 context.Context, arg1 *core.Card, arg2 *core.User) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "UpdateCardByUser", arg0, arg1)
+	ret := m.ctrl.Call(m, "UpdateCardByUser", arg0, arg1, arg2)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // UpdateCardByUser indicates an expected call of UpdateCardByUser.
-func (mr *MockCardStoragerMockRecorder) UpdateCardByUser(arg0, arg1 interface{}) *gomock.Call {
+func (mr *MockCardStoragerMockRecorder) UpdateCardByUser(arg0, arg1, arg2 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateCardByUser", reflect.TypeOf((*MockCardStorager)(nil).UpdateCardByUser), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateCardByUser", reflect.TypeOf((*MockCardStorager)(nil).UpdateCardByUser), arg0, arg1, arg2)
 }

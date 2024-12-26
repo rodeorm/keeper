@@ -5,6 +5,7 @@ import (
 	"github.com/rodeorm/keeper/internal/repo"
 )
 
+// ConfigurateServer создает сервер на основании данных конфиг файла
 func ConfigurateServer(configFile string) (*Server, error) {
 	queue := core.NewQueue(3)
 
@@ -13,7 +14,6 @@ func ConfigurateServer(configFile string) (*Server, error) {
 		Build()
 	srv.MessageQueue = queue
 
-	//Получаем хранилище. Пока одно.
 	storage, err := repo.GetPostgresStorage(srv.DBProd, srv.CryptKey)
 	if err != nil {
 		return nil, err

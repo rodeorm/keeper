@@ -39,10 +39,10 @@ func updateMain(msg tea.Msg, m *Model) (tea.Model, tea.Cmd) {
 				return m, tea.Batch(textinput.Blink, m.listCard)
 			case 1:
 				m.CurrentScreen = "coupleList"
-				return m, textinput.Blink
+				return m, tea.Batch(textinput.Blink, m.listCouple)
 			case 2:
 				m.CurrentScreen = "textList"
-				return m, textinput.Blink
+				return m, tea.Batch(textinput.Blink, m.listText)
 			case 3:
 				m.CurrentScreen = "binaryList"
 				return m, tea.Batch(textinput.Blink, m.listBinary)
@@ -57,7 +57,7 @@ func viewMain(m *Model) string {
 	c := m.Main.Choice //  Забираем значение из модели, что выбрано
 	var choices, tpl string
 
-	tpl = fmt.Sprintf("Добро пожловать, %s!\n\nВыберите раздел данных:\n",
+	tpl = fmt.Sprintf("Добро пожаловать в главное меню, %s!\n\nВыберите раздел данных:\n",
 		keywordStyle.Render(m.User.Login))
 	tpl += "%s\n\n"
 	tpl += subtleStyle.Render("j/k, up/down: select") + dotStyle +
