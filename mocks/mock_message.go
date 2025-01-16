@@ -35,33 +35,33 @@ func (m *MockMessageStorager) EXPECT() *MockMessageStoragerMockRecorder {
 	return m.recorder
 }
 
-// CreateMessage mocks base method.
-func (m *MockMessageStorager) CreateMessage(arg0 context.Context, arg1 *core.Message) error {
+// AddMessage mocks base method.
+func (m *MockMessageStorager) AddMessage(arg0 context.Context, arg1 *core.Message) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateMessage", arg0, arg1)
+	ret := m.ctrl.Call(m, "AddMessage", arg0, arg1)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
-// CreateMessage indicates an expected call of CreateMessage.
-func (mr *MockMessageStoragerMockRecorder) CreateMessage(arg0, arg1 interface{}) *gomock.Call {
+// AddMessage indicates an expected call of AddMessage.
+func (mr *MockMessageStoragerMockRecorder) AddMessage(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateMessage", reflect.TypeOf((*MockMessageStorager)(nil).CreateMessage), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddMessage", reflect.TypeOf((*MockMessageStorager)(nil).AddMessage), arg0, arg1)
 }
 
-// ReadUnsendedMessages mocks base method.
-func (m *MockMessageStorager) ReadUnsendedMessages(arg0 context.Context) ([]core.Message, error) {
+// SelectUnsendedMessages mocks base method.
+func (m *MockMessageStorager) SelectUnsendedMessages(arg0 context.Context) ([]core.Message, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ReadUnsendedMessages", arg0)
+	ret := m.ctrl.Call(m, "SelectUnsendedMessages", arg0)
 	ret0, _ := ret[0].([]core.Message)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// ReadUnsendedMessages indicates an expected call of ReadUnsendedMessages.
-func (mr *MockMessageStoragerMockRecorder) ReadUnsendedMessages(arg0 interface{}) *gomock.Call {
+// SelectUnsendedMessages indicates an expected call of SelectUnsendedMessages.
+func (mr *MockMessageStoragerMockRecorder) SelectUnsendedMessages(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ReadUnsendedMessages", reflect.TypeOf((*MockMessageStorager)(nil).ReadUnsendedMessages), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SelectUnsendedMessages", reflect.TypeOf((*MockMessageStorager)(nil).SelectUnsendedMessages), arg0)
 }
 
 // UpdateMessage mocks base method.

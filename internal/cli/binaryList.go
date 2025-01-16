@@ -1,6 +1,8 @@
 package cli
 
 import (
+	"context"
+	"fmt"
 	"os"
 	"strconv"
 
@@ -8,18 +10,51 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
 	"github.com/rodeorm/keeper/internal/core"
+	"github.com/rodeorm/keeper/internal/grpc/client"
 )
 
 // BinaryListScreen данные для отображения карт пользователя
 type BinaryList struct {
 	table table.Model
+	Msg   string
+}
+
+type binaryListMsg struct {
+	bins []core.Binary
+	err  error
+}
+
+func (m *Model) listBinary() tea.Msg {
+	ctx := context.TODO()
+
+	bs, err := client.ReadAllBinaries(ctx, m.Token, m.sc)
+
+	msg := binaryListMsg{}
+	if err != nil {
+		msg.err = err
+		return msg
+	}
+
+	msg.bins = make([]core.Binary, 0)
+
+	for _, v := range bs {
+		msg.bins = append(msg.bins,
+			core.Binary{
+				Value: v.Value,
+				Name:  v.Name,
+				Meta:  v.Meta,
+				ID:    int(v.Id),
+			})
+	}
+
+	return msg
 }
 
 func initBinaryList() BinaryList {
 	columns := []table.Column{
 		{Title: "Имя", Width: 50},
 		{Title: "Мета", Width: 100},
-		{Title: "ID", Width: 5}, // Бинарник не показываем, он нужен только для быстрого возврата. Большие файлы так лучше не хранить, конечно
+		{Title: "ID", Width: 0}, // Бинарник не показываем, он нужен только для быстрого возврата. Большие файлы так лучше не хранить, конечно
 	}
 
 	t := table.New(
@@ -70,17 +105,16 @@ func updateBinaryList(msg tea.Msg, m *Model) (tea.Model, tea.Cmd) {
 				m.FilePath, _ = os.UserHomeDir()
 			}
 			svCmd := m.saveBinary(bin, m.FilePath)
-
-			return m, tea.Batch(
-				tea.Printf("Файл %s (id %d) будет сохранен в папку %s", bin.Name, bin.ID, m.FilePath),
-				svCmd,
-			)
+			m.BinaryList.Msg = fmt.Sprintf("Файл %s (id %d) будет сохранен в папку %s", bin.Name, bin.ID, m.FilePath)
+			return m, tea.Batch(svCmd)
 		}
 	case saveBinaryMsg:
 		if msg.err != nil {
-			return m, tea.Printf("Ошибка при сохранении %s", msg.err.Error())
+			m.BinaryList.Msg = fmt.Sprintf("Ошибка при сохранении %s", msg.err.Error())
+			return m, nil
 		} else {
-			return m, tea.Printf("Удачно сохранили")
+			m.BinaryList.Msg = fmt.Sprintf("Файл удачно сохранили в папку %s", m.FilePath)
+			return m, nil
 		}
 	case binaryListMsg:
 		rows := make([]table.Row, 0)
@@ -100,5 +134,8 @@ func updateBinaryList(msg tea.Msg, m *Model) (tea.Model, tea.Cmd) {
 }
 
 func viewBinaryList(m *Model) string {
+	if m.Msg != "" {
+		return m.header() + m.Msg + "\n" + baseStyle.Render(m.BinaryList.table.View()) + "\n" + footerTable() + "\n" + footer()
+	}
 	return m.header() + baseStyle.Render(m.BinaryList.table.View()) + "\n" + footerTable() + "\n" + footer()
 }

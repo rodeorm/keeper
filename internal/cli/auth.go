@@ -1,6 +1,7 @@
 package cli
 
 import (
+	"context"
 	"fmt"
 	"strings"
 
@@ -8,6 +9,7 @@ import (
 	"github.com/charmbracelet/bubbles/textinput"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/rodeorm/keeper/internal/core"
+	"github.com/rodeorm/keeper/internal/grpc/client"
 )
 
 // Auth данные для аутентификации
@@ -17,6 +19,20 @@ type Auth struct {
 	CursorMode cursor.Mode
 
 	err error // Ошибка при авторизации
+}
+
+type authMsg struct {
+	auth bool //Прошел аутентификаию по логину и паролю или нет
+}
+
+// authUser - команда на авторизацию пользователя
+func (m *Model) authUser() tea.Msg {
+	ctx := context.TODO()
+	err := client.AuthUser(&m.User, ctx, m.sc)
+	if err != nil {
+		return authMsg{auth: false}
+	}
+	return authMsg{auth: true}
 }
 
 func (m *Model) updateAuthInputs(msg tea.Msg) tea.Cmd {

@@ -1,12 +1,14 @@
 package cli
 
 import (
+	"context"
 	"fmt"
 	"strings"
 
 	"github.com/charmbracelet/bubbles/cursor"
 	"github.com/charmbracelet/bubbles/textinput"
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/rodeorm/keeper/internal/grpc/client"
 )
 
 // Verify данные для ввода одноразового пароля
@@ -16,6 +18,19 @@ type Verify struct {
 	CursorMode cursor.Mode
 
 	err string
+}
+
+// verifyMsg - сообщение о результате аутентификаци по одноразовому паролю
+type verifyMsg struct {
+	valid bool
+}
+
+// verifyOTP - команда на верификацию одноразового пароля
+func (m *Model) verifyOTP() tea.Msg {
+	ctx := context.TODO()
+	vrd := verifyMsg{}
+	vrd.valid, m.Token = client.Verify(&m.User, ctx, m.sc)
+	return vrd
 }
 
 func (m *Model) updateVerifyInputs(msg tea.Msg) tea.Cmd {

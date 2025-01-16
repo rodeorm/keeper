@@ -29,6 +29,10 @@ type Model struct {
 	BinaryPick
 	BinaryAdd
 	BinaryList
+	CoupleList
+	CoupleCreate
+	TextCreate
+	TextList
 
 	sc proto.KeeperServiceClient
 }
@@ -57,7 +61,12 @@ func InitialModel(sc proto.KeeperServiceClient, filePath string) Model {
 	m.BinaryList = initBinaryList() // Общий список
 	m.BinaryPick = initBinaryPick() // Создание (выбор файла)
 	m.BinaryAdd = initBinaryAdd()   // Создание (сохранение файла с новым именем и метой)
-
+	// Данные пар логин-пароль
+	m.CoupleCreate = initCoupleCreate()
+	m.CoupleList = initCoupleList()
+	// Данные текстовых сообщений
+	m.TextCreate = initTextCreate()
+	m.TextList = initTextList()
 	m.sc = sc
 
 	return m

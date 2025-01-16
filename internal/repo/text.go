@@ -14,7 +14,7 @@ func (s *postgresStorage) AddTextByUser(ctx context.Context, t *core.Text, u *co
 	if err != nil {
 		return err
 	}
-	err = s.preparedStatements["AddByte"].GetContext(ctx, t, u.ID, core.TextType, d, time.Now())
+	err = s.preparedStatements["AddByte"].GetContext(ctx, t, u.ID, core.TextType, d, time.Now(), "", t.Meta)
 	if err != nil {
 		return err
 	}
@@ -23,7 +23,7 @@ func (s *postgresStorage) AddTextByUser(ctx context.Context, t *core.Text, u *co
 func (s *postgresStorage) SelectAllTextsByUser(ctx context.Context, u *core.User) ([]core.Text, error) {
 	cyphTexts := make([]core.Data, 0)
 	ts := make([]core.Text, 0)
-	err := s.preparedStatements["SelectByte"].SelectContext(ctx, &cyphTexts, u.ID, core.TextType)
+	err := s.preparedStatements["SelectAllBytes"].SelectContext(ctx, &cyphTexts, u.ID, core.TextType)
 	if err != nil {
 		return nil, err
 	}
